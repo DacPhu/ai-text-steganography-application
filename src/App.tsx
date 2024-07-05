@@ -4,7 +4,7 @@ import Navbar from "./components/NavBar";
 import HomePage from "./pages/HomePage";
 import EncryptPage from "./pages/EncryptPage";
 import DecryptPage from "./pages/DecryptPage";
-import LogInPage from "./pages/LoginPage";
+import LogInPage from "./pages/LogInPage";
 import SignUpPage from "./pages/SignUpPage";
 
 const App = () => {
