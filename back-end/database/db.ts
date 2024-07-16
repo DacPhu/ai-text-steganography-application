@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import dbConfig from "../configs/db.config";
+import dbConfig from "../config/db.config";
 
 // Define your database configuration
 const { HOST, PORT, USER, PASSWORD, DB } = dbConfig;
