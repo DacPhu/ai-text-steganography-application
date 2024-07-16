@@ -7,7 +7,9 @@ const { validationResult, matchedData } = require("express-validator");
 const saltRounds = 10;
 
 // Create new user
-export const signup = async (req, res) => {
+import { Request, Response } from "express";
+
+export const signup = async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(422).send(errors);
@@ -31,7 +33,7 @@ export const signup = async (req, res) => {
     const user = await User.create(newUser);
     res.status(201);
     await login(req, res);
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     if (err.code == "ER_DUP_ENTRY") {
       res.status(409).json({
@@ -46,7 +48,7 @@ export const signup = async (req, res) => {
 };
 
 // Login user
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   // if request is invalid (empty body)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -104,7 +106,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = (req, res) => {
+export const logout = (req: Request, res: Response) => {
   try {
     res.clearCookie("accessToken");
     res.status(200).send({
