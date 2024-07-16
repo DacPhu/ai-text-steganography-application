@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InputForm from "../../Decrypt/_components/InputForm";
 import DecryptSettings from "./DecryptSettings";
+import { sendDecryptCommand } from "../../../actions/get"; // Adjust the import path as needed
 
 const DecryptForm = () => {
   const [inputData, setInputData] = useState<{
@@ -16,38 +17,19 @@ const DecryptForm = () => {
     setInputData(data);
   };
 
-  const handleSettingsSubmit = (params: { param1: string; param2: number }) => {
-    setSettingsData(params);
-    submitAllData({ ...inputData, ...params });
-  };
-
-  const submitAllData = async (data: {
-    text: string;
-    file: File | null;
+  const handleSettingsSubmit = async (params: {
     param1: string;
     param2: number;
   }) => {
-    const formData = new FormData();
-    formData.append("text", data.text);
-    formData.append("param1", data.param1);
-    formData.append("param2", data.param2.toString());
-    if (data.file) {
-      formData.append("file", data.file);
-    }
-
-    try {
-      const response = await fetch("/your-endpoint", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        console.log("Form submitted successfully");
-      } else {
-        console.error("Form submission error");
-      }
-    } catch (error) {
-      console.error("Form submission error", error);
+    setSettingsData(params);
+    const response = await sendDecryptCommand(
+      inputData.text,
+      inputData.file,
+      params.param1,
+      params.param2
+    );
+    if (response) {
+      console.log("Decryption response:", response);
     }
   };
 
