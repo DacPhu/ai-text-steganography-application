@@ -1,11 +1,10 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import HomePage from "./pages/HomePage";
 import EncryptPage from "./pages/EncryptPage";
 import DecryptPage from "./pages/DecryptPage";
-import LogInPage from "./pages/LogInPage";
-import SignUpPage from "./pages/SignUpPage";
+import LogInPage from "./pages/Login/LogInPage";
+import SignUpPage from "./pages/SignUp/SignUpPage";
 
 const App = () => {
   return (
