@@ -1,5 +1,4 @@
-import React from "react";
-import DecryptForm from "../components/DecryptFrom";
+import DecryptForm from "./_components/DecryptForm";
 
 const DecryptPage = () => {
   return (

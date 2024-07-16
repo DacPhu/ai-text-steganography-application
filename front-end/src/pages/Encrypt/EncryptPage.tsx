@@ -1,5 +1,4 @@
-import React from "react";
-import EncryptForm from "../components/EncryptForm";
+import EncryptForm from "./_components/EncryptForm";
 
 const EncryptPage = () => {
   return (
