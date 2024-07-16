@@ -30,6 +30,11 @@ const signinFormSchema = z.object({
 
 type SigninFormValues = z.infer<typeof signinFormSchema>;
 
+const defaultValues: Partial<SigninFormValues> = {
+  username: "",
+  password: "",
+};
+
 const LoginForm = () => {
   const { isAuth, setAuth } = React.useContext(AppContext);
   const navigate = useNavigate();
@@ -40,6 +45,7 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<SigninFormValues>({
     resolver: zodResolver(signinFormSchema),
+    defaultValues,
     mode: "onChange",
   });
 
@@ -97,7 +103,9 @@ const LoginForm = () => {
           </label>
           <a href="/forgot-password">Forgot password?</a>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">
+          Login
+        </button>
         <div className="register-link">
           <p>
             Don't have an account? <a href="/signup">Register</a>

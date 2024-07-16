@@ -50,6 +50,7 @@ export const signup = async (req: Request, res: Response) => {
 // Login user
 export const login = async (req: Request, res: Response) => {
   // if request is invalid (empty body)
+  console.log(req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(422).send(errors);
