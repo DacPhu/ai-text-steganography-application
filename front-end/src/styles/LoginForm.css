@@ -9,16 +9,17 @@ body {
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url("../assets/images/background-login.jpg") no-repeat;
+  background: url("../assets/images/bg-ecrypt.jpg") no-repeat;
   background-size: cover;
   background-position: center;
 }
 
 .wrapper {
   width: 420px;
-  background: slateblue;
+  backdrop-filter: blur(10px);
   color: #fff;
   border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 30px 40px;
 }
 

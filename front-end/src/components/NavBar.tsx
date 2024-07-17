@@ -1,9 +1,13 @@
 import React from "react";
+<<<<<<< HEAD:front-end/src/components/NavBar.tsx
+=======
+import "../styles/Navbar.css";
+>>>>>>> 417645424aef1aedd31584cd421a36ba290d99bd:src/components/NavBar.tsx
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <nav className="navbar navbar-light navbar-expand-md bg-light fixed">
+    <nav className="navbar navbar-light navbar-expand-md fixed">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
           TEXT STEGANOGRAPHY
@@ -27,7 +31,19 @@ const Navbar = () => {
               </a>
             </li>
             <li className="nav-item mx-1">
-              <a className="nav-link" href="#">
+              <a className="nav-link text-white" href="/encrypt">
+                Encrypt
+              </a>
+            </li>
+
+            <li className="nav-item mx-1">
+              <a className="nav-link text-white" href="/decrypt">
+                Decrypt
+              </a>
+            </li>
+
+            <li className="nav-item mx-1">
+              <a className="nav-link text-white" href="#">
                 Help
               </a>
             </li>
