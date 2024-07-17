@@ -1,18 +1,24 @@
-import { Sequelize } from "sequelize";
-import dbConfig from "../config/db.config";
+const { Sequelize } = require("sequelize");
+require("dotenv").config();
 
-// Define your database configuration
+const dbConfig = {
+  HOST: process.env.DB_HOST,
+  USER: process.env.DB_USER,
+  PASSWORD: process.env.DB_PASSWORD,
+  DB: process.env.DB_NAME,
+  PORT: process.env.DB_PORT,
+};
+
 const { HOST, PORT, USER, PASSWORD, DB } = dbConfig;
-const portNumber = parseInt(PORT!);
+const portNumber = parseInt(PORT);
 
-// Initialize Sequelize with PostgreSQL
-const sequelize = new Sequelize(DB!, USER!, PASSWORD, {
+const sequelize = new Sequelize(DB, USER, PASSWORD, {
   port: portNumber,
   dialect: "postgres",
 });
+let models = require("../models");
 
-// Check database connection
-sequelize
+models.sequelize
   .authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");
@@ -21,14 +27,11 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
-// Sync all defined models to the database
-sequelize
-  .sync({ force: false }) // set force: true to drop existing tables and re-create them
+models.sequelize
+  .sync({ force: false })
   .then(() => {
     console.log("All models synced successfully.");
   })
   .catch((err) => {
     console.error("Error syncing models:", err);
   });
-
-export default sequelize;

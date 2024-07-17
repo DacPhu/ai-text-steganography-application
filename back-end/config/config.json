@@ -1,22 +1,22 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "ai-user-db",
+    "username": "postgres",
+    "password": ".Dcpu22042003",
+    "database": "ai-app-db",
     "host": "127.0.0.1",
     "dialect": "postgresql"
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "ai-user-db",
+    "password": ".Dcpu22042003",
+    "database": "ai-app-db",
     "host": "127.0.0.1",
     "dialect": "postgresql"
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "ai-user-db",
+    "password": ".Dcpu22042003",
+    "database": "ai-app-db",
     "host": "127.0.0.1",
     "dialect": "postgresql"
   }

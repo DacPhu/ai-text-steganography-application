@@ -1,4 +1,4 @@
-import "dotenv";
+require("dotenv").config();
 
 const dbConfig = {
   HOST: process.env.DB_HOST,
@@ -8,4 +8,4 @@ const dbConfig = {
   PORT: process.env.DB_PORT,
 };
 
-export default dbConfig;
+exports.dbConfig = dbConfig;
