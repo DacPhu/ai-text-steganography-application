@@ -1,8 +1,5 @@
 import React from "react";
-<<<<<<< HEAD:front-end/src/components/NavBar.tsx
-=======
 import "../styles/Navbar.css";
->>>>>>> 417645424aef1aedd31584cd421a36ba290d99bd:src/components/NavBar.tsx
 import { Link } from "react-router-dom";
 
 const Navbar = () => {

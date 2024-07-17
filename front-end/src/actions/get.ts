@@ -1,14 +1,24 @@
 export const sendEncryptCommand = async (
   text: string,
   file: File | null,
-  param1: string,
-  param2: number
+  gamma: number,
+  messageBase: number,
+  seedScheme: string,
+  windowLength: number,
+  maxNewTokenRatio: number,
+  numBeams: number,
+  repetitionPenalty: number
 ) => {
   try {
     const formData = new FormData();
     formData.append("text", text);
-    formData.append("param1", param1);
-    formData.append("param2", param2.toString());
+    formData.append("gamma", gamma.toString());
+    formData.append("msg_base", messageBase.toString());
+    formData.append("seed_scheme", seedScheme);
+    formData.append("window_length", windowLength.toString());
+    formData.append("max_new_token_ratio", maxNewTokenRatio.toString());
+    formData.append("num_beams", numBeams.toString());
+    formData.append("repetition_penalty", repetitionPenalty.toString());
     if (file) {
       formData.append("file", file);
     }
@@ -29,14 +39,16 @@ export const sendEncryptCommand = async (
 export const sendDecryptCommand = async (
   text: string,
   file: File | null,
-  param1: string,
-  param2: number
+  messageBase: number,
+  seedScheme: string,
+  windowLength: number
 ) => {
   try {
     const formData = new FormData();
     formData.append("text", text);
-    formData.append("param1", param1);
-    formData.append("param2", param2.toString());
+    formData.append("msg_base", messageBase.toString());
+    formData.append("seed_scheme", seedScheme);
+    formData.append("window_length", windowLength.toString());
     if (file) {
       formData.append("file", file);
     }
