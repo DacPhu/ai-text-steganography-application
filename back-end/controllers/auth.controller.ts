@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const models = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
@@ -23,6 +23,7 @@ export const signup = async (req: Request, res: Response) => {
   let hashedPassword = await bcrypt.hash(password, saltRounds);
   data.password = hashedPassword;
 
+  const User = models.User;
   const newUser = new User({
     password: hashedPassword,
     ...data,
@@ -60,10 +61,12 @@ export const login = async (req: Request, res: Response) => {
 
   let username = data.username;
   let password = data.password;
-
   try {
+    // console.log(models);
+    console.log(models.default.User);
+    const User = models.default.User;
     // Find user with given username
-    const user = await User.findOne({ username: username }, 1);
+    const user = await User.findOne({ where: { username: username } });
     if (!user) {
       res.status(404).json({
         message: "User do not exists",
@@ -71,7 +74,7 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
     // Check password
-    let matched = await bcrypt.compare(password, user.password);
+    let matched = await bcrypt.compare(password, user.password, saltRounds);
     if (matched) {
       // Create new access token
       const privateKey = fs.readFileSync(path.join(__dirname, "../jwt.key"));

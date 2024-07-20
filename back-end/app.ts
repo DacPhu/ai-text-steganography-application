@@ -2,6 +2,8 @@ import express, { Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import db from "./models"
+
 
 // Initialize dotenv configuration
 dotenv.config();
@@ -21,8 +23,10 @@ app.use(cookieParser());
 
 // Routes
 import authRouter from "./routes/auth.route";
+import processingRouter from "./routes/processing.route";
 
 app.use("/", authRouter);
+app.use("/processing", processingRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
