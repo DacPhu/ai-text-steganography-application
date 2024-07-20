@@ -71,6 +71,7 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (values: SignUpFormValues) => {
+    console.log("HERE")
     try {
       const res = await signup(values.username, values.password, values.email);
       if (res) {

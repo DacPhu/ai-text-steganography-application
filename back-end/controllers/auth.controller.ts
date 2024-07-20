@@ -18,22 +18,27 @@ export const signup = async (req: Request, res: Response) => {
   const data = matchedData(req);
 
   let password = data.password;
+  console.log(data);
 
   // Use bcrypt to hash the password
   let hashedPassword = await bcrypt.hash(password, saltRounds);
   data.password = hashedPassword;
 
-  const User = models.User;
-  const newUser = new User({
-    password: hashedPassword,
-    ...data,
-  });
+  const firstName = data.username;
+  const User = models.default.User;
 
-  // Create new user with hashed password
   try {
-    const user = await User.create(newUser);
-    res.status(201);
-    await login(req, res);
+    const newUser = await User.create({
+      firstName: firstName,
+      lastName: "",
+      username: data.username,
+      email: data.email,
+      password: hashedPassword,
+    });
+    res.status(201).json({
+      message: "User created successfully",
+      user_id: newUser.id,
+    });
   } catch (err: any) {
     console.log(err);
     if (err.code == "ER_DUP_ENTRY") {
@@ -74,9 +79,11 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
     // Check password
-    let matched = await bcrypt.compare(password, user.password, saltRounds);
+    let matched = await bcrypt.compare(password, user.password);
     if (matched) {
       // Create new access token
+
+
       const privateKey = fs.readFileSync(path.join(__dirname, "../jwt.key"));
       const accessToken = jwt.sign(
         {
