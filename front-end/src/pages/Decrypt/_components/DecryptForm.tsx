@@ -8,11 +8,11 @@ const DecryptForm = () => {
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  const handleMessageBaseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMessageBaseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setMessageBase(Number(e.target.value));
   };
 
-  const handleSeedSchemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSeedSchemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSeedScheme(e.target.value);
   };
 
@@ -29,7 +29,7 @@ const DecryptForm = () => {
     setFile(file);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     sendDecryptCommand(text, file, messageBase, seedScheme, windowLength);
   };
