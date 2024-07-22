@@ -12,9 +12,9 @@ router.post("/signup", signupScheme, signup);
 
 router.post("/login", loginScheme, login);
 
-router.post("/logout", validateToken, logout);
+router.post("/logout", [validateToken], logout);
 
-router.post("/auth", validateToken, (req: Request, res: Response) => {
+router.post("/auth", [validateToken], (req: Request, res: Response) => {
   res.status(200).json({
     message: "This user is authenticated",
   });

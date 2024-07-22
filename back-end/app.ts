@@ -2,7 +2,6 @@ import express, { Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import db from "./models"
 
 
 // Initialize dotenv configuration

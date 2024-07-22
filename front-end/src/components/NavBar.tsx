@@ -1,8 +1,11 @@
 import React from "react";
+import { useContext } from "react";
 import "../styles/Navbar.css";
 import { Link } from "react-router-dom";
+import { AppContext} from "../auth-provider";
 
 const Navbar = () => {
+  const { isAuth, setAuth } = useContext(AppContext);
   return (
     <nav className="navbar navbar-light navbar-expand-md fixed">
       <div className="container-fluid">
@@ -45,14 +48,23 @@ const Navbar = () => {
               </a>
             </li>
           </ul>
-          <div className="d-flex">
-            <Link to="/login" className="btn btn-outline-primary me-2">
-              Login
-            </Link>
-            <Link to="/signup" className="btn btn-outline-secondary">
-              Sign Up
-            </Link>
-          </div>
+
+          {isAuth ? (
+            <div className="d-flex">
+              <Link to="/logout" className="btn btn-outline-primary me-2">
+                Logout
+              </Link>
+            </div>
+          ) : (
+            <div className="d-flex">
+              <Link to="/login" className="btn btn-outline-primary me-2">
+                Login
+              </Link>
+              <Link to="/signup" className="btn btn-outline-secondary">
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>

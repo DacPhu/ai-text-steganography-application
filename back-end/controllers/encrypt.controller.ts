@@ -6,6 +6,7 @@ import { Request, Response } from "express";
 import axios from "axios";
 
 export const encrypt = async (req: Request, res: Response) => {
+  console.log("Encrypting data...", req.body);
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -15,6 +16,9 @@ export const encrypt = async (req: Request, res: Response) => {
   const { msg, prompt } = req.body;
   const encodedMsg = Buffer.from(msg).toString("base64");
   const encodedPrompt = Buffer.from(prompt).toString("base64");
+
+  console.log("Encoded Message:", encodedMsg);
+  console.log("Encoded Prompt:", encodedPrompt);
 
   try {
     // Send encoded message and prompt to another server via API
