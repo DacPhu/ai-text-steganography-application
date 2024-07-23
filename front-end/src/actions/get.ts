@@ -1,3 +1,4 @@
+
 export const sendEncryptCommand = async (
   prompt: string,
   message: string,
@@ -26,13 +27,12 @@ export const sendEncryptCommand = async (
   // if (file) {
   //   formData.append("file", file);
   // }
+  // ...
+
   const res = await fetch(`http://localhost:3001/processing/encrypt`, {
     credentials: "include",
     method: "POST",
-    body: JSON.stringify(formData),
-    headers: new Headers({
-      "content-type": "application/json",
-    }),
+    body: formData,
   });
 
   const data = await res.json();
@@ -42,7 +42,7 @@ export const sendEncryptCommand = async (
 
 export const sendDecryptCommand = async (
   text: string,
-  file: File | null,
+  // file: File | null,
   messageBase: number,
   seedScheme: string,
   windowLength: number
@@ -53,9 +53,9 @@ export const sendDecryptCommand = async (
     formData.append("msg_base", messageBase.toString());
     formData.append("seed_scheme", seedScheme);
     formData.append("window_length", windowLength.toString());
-    if (file) {
-      formData.append("file", file);
-    }
+    // if (file) {
+    //   formData.append("file", file);
+    // }
 
     const res = await fetch(`http://localhost:3001/processing/decrypt`, {
       credentials: "include",

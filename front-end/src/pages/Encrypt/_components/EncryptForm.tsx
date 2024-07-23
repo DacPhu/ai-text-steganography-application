@@ -71,7 +71,7 @@ const EncryptForm = () => {
       // file,
       delta,
       messageBase,
-      startPos,
+      startPosition,
       seedScheme,
       windowLength,
       maxNewTokenRatio,

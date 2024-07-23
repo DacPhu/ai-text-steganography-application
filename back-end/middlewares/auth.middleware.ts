@@ -30,7 +30,7 @@ const validateToken = async (
 
     const publicKey = fs.readFileSync(path.join(__dirname, "../jwt.key.pub"));
     const validToken = jwt.verify(accessToken, publicKey) as UserPayload;
-
+    console.log("THIS IS BODY", req.body);
     req.user = validToken; // Assigning validToken to req.user
     console.log("validateToken: ", req.user);
     next();

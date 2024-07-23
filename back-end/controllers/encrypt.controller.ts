@@ -12,8 +12,7 @@ export const encrypt = async (req: Request, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(422).send(errors.array());
   }
-
-  const { msg, prompt } = req.body;
+  const {msg, prompt} = req.body;
   const encodedMsg = Buffer.from(msg).toString("base64");
   const encodedPrompt = Buffer.from(prompt).toString("base64");
 

@@ -1,12 +1,14 @@
 import { Router, Request, Response } from "express";
 import { encrypt } from "../controllers/encrypt.controller";
 import { decrypt } from "../controllers/decrypt.controller";
-const { validateToken } = require("../middlewares/auth.middleware");
+import { validateToken } from "../middlewares/auth.middleware";
+import multer from "multer";
 
+const upload = multer();
 const router = Router();
 
-router.post("/encrypt", [validateToken], encrypt);
+router.post("/encrypt", [validateToken, upload.none()], encrypt);
 
-router.post("/decrypt", [validateToken], decrypt);
+router.post("/decrypt", [validateToken, upload.none()], decrypt);
 
 export default router;
