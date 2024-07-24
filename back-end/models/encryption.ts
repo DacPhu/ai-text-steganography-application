@@ -5,7 +5,7 @@ import { Model } from "sequelize";
 interface EncryptionAttributes {
   id: number;
   userId: number;
-  keyId: string;
+  keyId: number;
   content: string;
   result: string;
 }
@@ -23,7 +23,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
     id!: number;
     userId!: number;
-    keyId!: string;
+    keyId!: number;
     content!: string;
     result!: string;
     static associate(models: any) {
@@ -50,7 +50,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
       },
       keyId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       content: DataTypes.STRING,

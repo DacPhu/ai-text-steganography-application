@@ -20,7 +20,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
     id!: number;
     userId!: number;
-    keyId!: string;
+    keyId!: number;
     content!: string;
     result!: string;
 
@@ -29,10 +29,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         foreignKey: "userId",
         targetKey: "id",
       });
-      // Decryption.belongsTo(models.SecretKey, {
-      //   foreignKey: "keyId",
-      //   targetKey: "id",
-      // });
+      Decryption.belongsTo(models.SecretKey, {
+        foreignKey: "keyId",
+        targetKey: "id",
+      });
     }
   }
   Decryption.init(
@@ -47,7 +47,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
       },
       keyId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       content: DataTypes.STRING,
