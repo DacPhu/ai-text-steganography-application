@@ -26,26 +26,27 @@ export const encrypt = async (req: Request, res: Response) => {
 
   try {
     // Send encoded message and prompt to another server via API
-    const formData = new FormData();
-    formData.append("prompt", prompt);
-    formData.append("msg", encodedMsg);
-    formData.append("start_pos", start_pos);
-    formData.append("seed_scheme", seed_scheme);
-    formData.append("window_length", window_length);
-    formData.append("max_new_token_ratio", max_new_token_ratio);
-    formData.append("num_beams", num_beams);
-    formData.append("repetition_penalty", repetition_penalty);
+    const body = {
+      msg: encodedMsg,
+      prompt: prompt,
+      start_pos: start_pos,
+      seed_scheme: seed_scheme,
+      window_length: window_length,
+      max_new_token_ratio: max_new_token_ratio,
+      num_beams: num_beams,
+      repetition_penalty: repetition_penalty,
+    };
 
-    const result = await axios.post("https://localhost:6969/encrypt", formData);
+    const result = await axios.post("http://localhost:6969/encrypt", body);
 
     if (result.status !== 200) {
       return res.status(500).send("Internal Server Error");
     }
     // Decode the result from the server
-    const decodedResult = Buffer.from(result.data, "base64").toString();
+    const decodedResult = Buffer.from(await result.data, "base64").toString();
     console.log("Decoded Result:", decodedResult);
     // Handle the result from the server
-    res.status(200).send(result.data);
+    res.status(200).send(await result.data);
   } catch (error) {
     console.error("Error sending data to server:", error);
     res.status(500).send("Internal Server Error");
