@@ -28,6 +28,18 @@ module.exports = (sequelize: any, DataTypes: any) => {
         foreignKey: "ownerId",
         targetKey: "id",
       });
+      SecretKey.hasMany(models.KeySharing, {
+        foreignKey: "keyId",
+        sourceKey: "id",
+      });
+      SecretKey.hasMany(models.Encryption, {
+        foreignKey: "keyId",
+        sourceKey: "id",
+      });
+      SecretKey.hasMany(models.Decryption, {
+        foreignKey: "keyId",
+        sourceKey: "id",
+      });
     }
   }
   SecretKey.init(

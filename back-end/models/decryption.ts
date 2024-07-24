@@ -25,15 +25,14 @@ module.exports = (sequelize: any, DataTypes: any) => {
     result!: string;
 
     static associate(models: any) {
-      // define association here
       Decryption.belongsTo(models.User, {
         foreignKey: "userId",
         targetKey: "id",
       });
-      Decryption.belongsTo(models.SecretKey, {
-        foreignKey: "keyId",
-        targetKey: "id",
-      });
+      // Decryption.belongsTo(models.SecretKey, {
+      //   foreignKey: "keyId",
+      //   targetKey: "id",
+      // });
     }
   }
   Decryption.init(

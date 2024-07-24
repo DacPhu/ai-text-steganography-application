@@ -9,7 +9,10 @@ interface KeySharingAttributes {
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class KeySharing extends Model {
+  class KeySharing
+    extends Model<KeySharingAttributes>
+    implements KeySharingAttributes
+  {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.

@@ -26,7 +26,22 @@ module.exports = (sequelize: any, DataTypes: { INTEGER: any; STRING: any }) => {
     password!: string;
 
     static associate(models: any) {
-      // define association here
+      User.hasMany(models.SecretKey, {
+        foreignKey: "ownerId",
+        sourceKey: "id",
+      });
+      User.hasMany(models.Encryption, {
+        foreignKey: "userId",
+        sourceKey: "id",
+      });
+      User.hasMany(models.Decryption, {
+        foreignKey: "userId",
+        sourceKey: "id",
+      });
+      User.hasMany(models.KeySharing, {
+        foreignKey: "userId",
+        sourceKey: "id",
+      });
     }
   }
   User.init(

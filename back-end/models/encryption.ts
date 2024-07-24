@@ -11,7 +11,10 @@ interface EncryptionAttributes {
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class Encryption extends Model {
+  class Encryption
+    extends Model<EncryptionAttributes>
+    implements EncryptionAttributes
+  {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
