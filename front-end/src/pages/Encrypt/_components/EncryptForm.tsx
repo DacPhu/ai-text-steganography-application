@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { sendEncryptCommand } from "../../../actions/get";
+import TokenHighlight from "./TokenHightLight";
 
 const EncryptForm = () => {
   const [delta, setDelta] = useState(0.5);
@@ -7,26 +8,34 @@ const EncryptForm = () => {
   const [startPosition, setStartPosition] = useState(0);
   const [seedScheme, setSeedScheme] = useState("sha_left_hash");
   const [windowLength, setWindowLength] = useState(1);
-  const [maxNewTokenRatio, setMaxNewTokenRatio] = useState(0);
+  const [maxNewTokensRatio, setMaxNewTokensRatio] = useState(0);
   const [numBeams, setNumBeams] = useState(0);
   const [repetitionPenalty, setRepetitionPenalty] = useState(0);
   const [prompt, setPrompt] = useState("");
   const [message, setMessage] = useState("");
+  const [haveResult, setHaveResult] = useState(true);
+  const [content, setContent] = useState<{
+    text: string;
+    msgRate: number;
+    tokens_info: Array<any>;
+  }>({ text: "", msgRate: 0, tokens_info: [] });
   // const [file, setFile] = useState<File | null>(null);
 
   const handleDeltaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDelta(Number(e.target.value));
   };
 
-  const handleMessageBaseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMessageBaseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setMessageBase(Number(e.target.value));
   };
 
-  const handleStartPositionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStartPositon(Number(e.target.value));
-  }
+  const handleStartPositionChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStartPosition(Number(e.target.value));
+  };
 
-  const handleSeedSchemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSeedSchemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSeedScheme(e.target.value);
   };
 
@@ -34,10 +43,10 @@ const EncryptForm = () => {
     setWindowLength(Number(e.target.value));
   };
 
-  const handleMaxNewTokenRatioChange = (
+  const handleMaxNewTokensRatioChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setMaxNewTokenRatio(Number(e.target.value));
+    setMaxNewTokensRatio(Number(e.target.value));
   };
 
   const handleNumBeamsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,9 +72,9 @@ const EncryptForm = () => {
   //   setFile(file);
   // };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendEncryptCommand(
+    const result = await sendEncryptCommand(
       prompt,
       message,
       // file,
@@ -74,10 +83,17 @@ const EncryptForm = () => {
       startPosition,
       seedScheme,
       windowLength,
-      maxNewTokenRatio,
+      maxNewTokensRatio,
       numBeams,
       repetitionPenalty
     );
+
+    if (result.status === 200) {
+      setHaveResult(false);
+
+      setContent(result.data);
+      console.log(typeof result.data.tokenInfo);
+    }
   };
 
   return (
@@ -126,7 +142,11 @@ const EncryptForm = () => {
               </div>
             </div>
             <div className="d-flex justify-content-center align-items-center mt-3">
-              <button onClick={handleSubmit} className="btn btn-dark">
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="btn btn-dark"
+              >
                 Encrypt
               </button>
             </div>
@@ -201,8 +221,8 @@ const EncryptForm = () => {
               <input
                 type="number"
                 className="form-control"
-                value={maxNewTokenRatio}
-                onChange={handleMaxNewTokenRatioChange}
+                value={maxNewTokensRatio}
+                onChange={handleMaxNewTokensRatioChange}
               />
             </div>
 
@@ -229,7 +249,12 @@ const EncryptForm = () => {
         </div>
       </div>
 
-      <div className="hidden">Result</div>
+      <div hidden={haveResult} className="col-md-8">
+        <div className="card m-3 p-3">
+          {/* <p>{content.text}</p> */}
+          <TokenHighlight tokens_info={content.tokens_info} />
+        </div>
+      </div>
     </>
   );
 };

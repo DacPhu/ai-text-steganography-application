@@ -11,7 +11,7 @@ export const decrypt = async (req: Request, res: Response) => {
     return res.status(422).send(errors.array());
   }
 
-  const { text, msg_base, seed_scheme, window_length, max_new_token_ratio } =
+  const { text, msg_base, seed_scheme, window_length, max_new_tokens_ratio } =
     req.body;
   const encodedText = Buffer.from(text).toString("base64");
 
@@ -21,8 +21,6 @@ export const decrypt = async (req: Request, res: Response) => {
     formData.append("msg_base", msg_base);
     formData.append("seed_scheme", seed_scheme);
     formData.append("window_length", window_length);
-    formData.append("max_new_token_ratio", max_new_token_ratio);
-    formData.append("private_key", "");
 
     // Send encoded message and prompt to another server via API
     const result = await axios.post("https://localhost:6969/dncrypt", {

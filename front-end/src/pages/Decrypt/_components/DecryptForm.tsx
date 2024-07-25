@@ -6,7 +6,7 @@ const DecryptForm = () => {
   const [seedScheme, setSeedScheme] = useState("sha_left_hash");
   const [windowLength, setWindowLength] = useState(1);
   const [text, setText] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
 
   const handleMessageBaseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setMessageBase(Number(e.target.value));
@@ -24,14 +24,14 @@ const DecryptForm = () => {
     setText(e.target.value);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] as File;
-    setFile(file);
-  };
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0] as File;
+  //   setFile(file);
+  // };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    sendDecryptCommand(text, file, messageBase, seedScheme, windowLength);
+    sendDecryptCommand(text, messageBase, seedScheme, windowLength);
   };
 
   return (
@@ -50,13 +50,13 @@ const DecryptForm = () => {
               />
               <div className="d-flex justify-content-between align-items-center mt-3">
                 <small className="text-muted">0/5,000 characters</small>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label className="btn btn-outline-secondary">
                     Upload file{" "}
                     <input type="file" hidden onChange={handleFileChange} />
                   </label>
                   {file && <small className="text-muted">{file.name}</small>}
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="d-flex justify-content-center align-items-center mt-3">
