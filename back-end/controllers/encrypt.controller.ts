@@ -37,16 +37,24 @@ export const encrypt = async (req: Request, res: Response) => {
       repetition_penalty: repetition_penalty,
     };
 
-    const result = await axios.post("http://localhost:6969/encrypt", body);
+    const result = await axios.post(
+      "http://localhost:6969/encrypt",
+      JSON.stringify(body)
+    );
 
     if (result.status !== 200) {
       return res.status(500).send("Internal Server Error");
     }
-    // Decode the result from the server
-    const decodedResult = Buffer.from(await result.data, "base64").toString();
-    console.log("Decoded Result:", decodedResult);
-    // Handle the result from the server
-    res.status(200).send(await result.data);
+
+    const text: string = result.data.text;
+    const msgRate: number = parseFloat(result.data.msgRate) * 100;
+    const tokenInfo: Array<string> = result.data.tokenInfo;
+
+    res.status(200).send({
+      text: text,
+      msgRate: msgRate,
+      tokenInfo: tokenInfo,
+    });
   } catch (error) {
     console.error("Error sending data to server:", error);
     res.status(500).send("Internal Server Error");
