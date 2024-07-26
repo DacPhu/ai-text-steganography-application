@@ -4,6 +4,7 @@ const { validationResult, matchedData } = require("express-validator");
 import { Request, Response } from "express";
 
 import axios from "axios";
+import { parse } from "path";
 
 export const encrypt = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -45,19 +46,21 @@ export const encrypt = async (req: Request, res: Response) => {
     };
 
     const body = {
-      prompt: String(prompt), // converted to string
-      msg: String(encodedMsg), // converted to string
-      gen_model: String("gpt2"), // converted to string
-      start_pos: Number(start_pos), // converted to number
-      delta: Number(delta), // converted to number
-      msg_base: Number(msg_base), // converted to number
-      seed_scheme: String(seed_scheme), // converted to string
-      window_length: Number(window_length), // converted to number
-      private_key: Number(0), // explicitly set to number 0
-      max_new_tokens_ratio: Number(max_new_tokens_ratio), // converted to number
-      num_beams: Number(num_beams), // converted to number
-      repetition_penalty: Number(repetition_penalty), // converted to number
+      prompt: String(prompt),
+      msg: String(encodedMsg),
+      gen_model: String("gpt2"),
+      start_pos: parseInt(start_pos), 
+      delta: parseFloat(delta),
+      msg_base: parseInt(msg_base), 
+      seed_scheme: String(seed_scheme), 
+      window_length: parseInt(window_length), 
+      private_key: parseInt(0), 
+      max_new_tokens_ratio: parseFloat(max_new_tokens_ratio),
+      num_beams: parseInt(num_beams),
+      repetition_penalty: parseFloat(repetition_penalty),
     };
+
+    console.log("HHHHHHHHHHHHHHHHHHHHHH", body);
 
     // Send the POST request
     const result = await fetch("http://localhost:6969/encrypt", {
