@@ -2,37 +2,46 @@ import React, { useState } from "react";
 import { sendEncryptCommand } from "../../../actions/get";
 import TokenHighlight from "./TokenHightLight";
 
+type TokenInfo = {
+  token: string;
+  base_enc: number;
+  byte_enc: number;
+  base_msg: number;
+  byte_msg: number;
+  byte_id: number;
+};
+
 const EncryptForm = () => {
   const [delta, setDelta] = useState(0.5);
   const [messageBase, setMessageBase] = useState(2);
   const [startPosition, setStartPosition] = useState(0);
   const [seedScheme, setSeedScheme] = useState("sha_left_hash");
   const [windowLength, setWindowLength] = useState(1);
-  const [maxNewTokensRatio, setMaxNewTokensRatio] = useState(0);
-  const [numBeams, setNumBeams] = useState(0);
-  const [repetitionPenalty, setRepetitionPenalty] = useState(0);
+  const [maxNewTokensRatio, setMaxNewTokensRatio] = useState(1);
+  const [numBeams, setNumBeams] = useState(1);
+  const [repetitionPenalty, setRepetitionPenalty] = useState(2);
   const [prompt, setPrompt] = useState("");
   const [message, setMessage] = useState("");
   const [haveResult, setHaveResult] = useState(true);
   const [content, setContent] = useState<{
     text: string;
     msgRate: number;
-    tokens_info: Array<any>;
+    tokens_info: Array<TokenInfo>;
   }>({ text: "", msgRate: 0, tokens_info: [] });
   // const [file, setFile] = useState<File | null>(null);
 
   const handleDeltaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDelta(Number(e.target.value));
+    setDelta(parseFloat(e.target.value));
   };
 
   const handleMessageBaseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMessageBase(Number(e.target.value));
+    setMessageBase(parseInt(e.target.value));
   };
 
   const handleStartPositionChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setStartPosition(Number(e.target.value));
+    setStartPosition(parseInt(e.target.value));
   };
 
   const handleSeedSchemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -40,23 +49,23 @@ const EncryptForm = () => {
   };
 
   const handleWindowLengthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setWindowLength(Number(e.target.value));
+    setWindowLength(parseInt(e.target.value));
   };
 
   const handleMaxNewTokensRatioChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setMaxNewTokensRatio(Number(e.target.value));
+    setMaxNewTokensRatio(parseFloat(e.target.value));
   };
 
   const handleNumBeamsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNumBeams(Number(e.target.value));
+    setNumBeams(parseInt(e.target.value));
   };
 
   const handleRepetitionPenaltyChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRepetitionPenalty(Number(e.target.value));
+    setRepetitionPenalty(parseInt(e.target.value));
   };
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -92,7 +101,7 @@ const EncryptForm = () => {
       setHaveResult(false);
 
       setContent(result.data);
-      console.log(typeof result.data.tokenInfo);
+      console.log(result.data.tokenInfo[0]);
     }
   };
 
@@ -252,6 +261,7 @@ const EncryptForm = () => {
       <div hidden={haveResult} className="col-md-8">
         <div className="card m-3 p-3">
           {/* <p>{content.text}</p> */}
+          <p> {content.text}</p>
           <TokenHighlight tokens_info={content.tokens_info} />
         </div>
       </div>

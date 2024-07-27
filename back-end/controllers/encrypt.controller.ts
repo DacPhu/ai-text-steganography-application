@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 
 import axios from "axios";
 import { parse } from "path";
+import { encode } from "punycode";
 
 export const encrypt = async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -31,42 +32,26 @@ export const encrypt = async (req: Request, res: Response) => {
     // const body = {};
     // console.log("HEEEEEEEE", JSON.stringify(body));
     const rawData = {
-      prompt: "A nice day:",
-      msg: "VGhpcyBpcyBhIG5pY2UgZGF5",
+      prompt: prompt,
+      msg: encodedMsg,
       gen_model: "gpt2",
-      start_pos: 0,
-      delta: 10,
-      msg_base: 2,
-      seed_scheme: "sha_left_hash",
-      window_length: 1,
+      start_pos: parseInt(start_pos),
+      delta: parseFloat(delta),
+      msg_base: parseInt(msg_base),
+      seed_scheme: seed_scheme,
+      window_length: parseInt(window_length),
       private_key: 0,
       max_new_tokens_ratio: 2,
-      num_beams: 4,
-      repetition_penalty: 1,
+      num_beams: parseFloat(num_beams),
+      repetition_penalty: parseInt(repetition_penalty),
     };
 
-    const body = {
-      prompt: String(prompt),
-      msg: String(encodedMsg),
-      gen_model: String("gpt2"),
-      start_pos: parseInt(start_pos), 
-      delta: parseFloat(delta),
-      msg_base: parseInt(msg_base), 
-      seed_scheme: String(seed_scheme), 
-      window_length: parseInt(window_length), 
-      private_key: parseInt(0), 
-      max_new_tokens_ratio: parseFloat(max_new_tokens_ratio),
-      num_beams: parseInt(num_beams),
-      repetition_penalty: parseFloat(repetition_penalty),
-    };
-
-    console.log("HHHHHHHHHHHHHHHHHHHHHH", body);
 
     // Send the POST request
     const result = await fetch("http://localhost:6969/encrypt", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "content-Type": "application/json",
       },
       body: JSON.stringify(rawData),
     });

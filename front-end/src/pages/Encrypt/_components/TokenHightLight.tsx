@@ -1,7 +1,16 @@
 import React from "react";
 
-const TokenHighlighter = ({ tokens_info }: { tokens_info: Array<any> }) => {
-  console.log("Tokens info:", tokens_info);
+type TokenInfo = {
+  token: string;
+  base_enc: number;
+  byte_enc: number;
+  base_msg: number;
+  byte_msg: number;
+  byte_id: number;
+};
+
+const TokenHighlighter = ({ tokens_info }: { tokens_info: Array<TokenInfo> }) => {
+  console.log("Tokens info:", tokens_info?.length);
   // Ensure tokenInfo is an array and provide a fallback
   return (
     <div>
