@@ -15,7 +15,7 @@ router.post("/login", loginScheme, login);
 router.post("/logout", [validateToken], logout);
 
 router.post("/auth", [validateToken], (req: Request, res: Response) => {
-  res.status(200).json({
+  return res.status(200).json({
     message: "This user is authenticated",
   });
 });

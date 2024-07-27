@@ -29,8 +29,6 @@ export const encrypt = async (req: Request, res: Response) => {
 
   try {
     // Send encoded message and prompt to another server via API
-    // const body = {};
-    // console.log("HEEEEEEEE", JSON.stringify(body));
     const rawData = {
       prompt: prompt,
       msg: encodedMsg,
@@ -41,7 +39,7 @@ export const encrypt = async (req: Request, res: Response) => {
       seed_scheme: seed_scheme,
       window_length: parseInt(window_length),
       private_key: 0,
-      max_new_tokens_ratio: 2,
+      max_new_tokens_ratio: parseFloat(max_new_tokens_ratio),
       num_beams: parseFloat(num_beams),
       repetition_penalty: parseInt(repetition_penalty),
     };

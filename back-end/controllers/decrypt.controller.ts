@@ -23,7 +23,7 @@ export const decrypt = async (req: Request, res: Response) => {
     };
 
     // Send encoded message and prompt to another server via API
-    const result = await axios.post("https://localhost:6969/dncrypt", rawData, {
+    const result = await axios.post("https://localhost:6969/decrypt", rawData, {
       headers: {
         "content-Type": "application/json",
       },

@@ -5,19 +5,22 @@ import EncryptPage from "./pages/Encrypt/EncryptPage";
 import DecryptPage from "./pages/Decrypt/DecryptPage";
 import LogInPage from "./pages/Login/LogInPage";
 import SignUpPage from "./pages/SignUp/SignUpPage";
+import { AppContextProvider } from "./auth-provider";
 
 const App = () => {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/encrypt" element={<EncryptPage />} />
-        <Route path="/decrypt" element={<DecryptPage />} />
-        <Route path="/login" element={<LogInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-      </Routes>
-    </Router>
+    <AppContextProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/encrypt" element={<EncryptPage />} />
+          <Route path="/decrypt" element={<DecryptPage />} />
+          <Route path="/login" element={<LogInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+        </Routes>
+      </Router>
+    </AppContextProvider>
   );
 };
 

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { AppContext } from "../../auth-provider";
 import { login } from "../../actions/auth";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "../../styles/LoginForm.css";
 
 const signinFormSchema = z.object({
@@ -39,6 +40,12 @@ const LoginForm = () => {
   const { isAuth, setAuth } = React.useContext(AppContext);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+    }
+  }, [isAuth, navigate]);
+
   const {
     register,
     handleSubmit,
@@ -54,11 +61,13 @@ const LoginForm = () => {
       const res = await login(values.username, values.password);
       if (res && res.status === 200) {
         setAuth(true);
+        setAuth(true);
+        console.log(isAuth);
         navigate("/");
-        toast.success(res.data.message);
+        toast.success(res.data);
       } else {
         if (res && res.data) {
-          toast.error(res.data.message);
+          toast.error(res.data);
         } else {
           toast.error("Login failed. Please try again.");
         }
@@ -103,9 +112,7 @@ const LoginForm = () => {
           </label>
           <a href="/forgot-password">Forgot password?</a>
         </div>
-        <button type="submit">
-          Login
-        </button>
+        <button type="submit">Login</button>
         <div className="register-link">
           <p>
             Don't have an account? <a href="/signup">Register</a>

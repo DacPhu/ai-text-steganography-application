@@ -58,8 +58,7 @@ export const login = async (req: Request, res: Response) => {
   // if request is invalid (empty body)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(422).send(errors);
-    return;
+    return res.status(422).send(errors);
   }
   const data = matchedData(req);
 
@@ -72,16 +71,14 @@ export const login = async (req: Request, res: Response) => {
     // Find user with given username
     const user = await User.findOne({ where: { username: username } });
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "User do not exists",
       });
-      return;
     }
     // Check password
     let matched = await bcrypt.compare(password, user.password);
     if (matched) {
       // Create new access token
-
 
       const privateKey = fs.readFileSync(path.join(__dirname, "../jwt.key"));
       const accessToken = jwt.sign(
@@ -93,7 +90,8 @@ export const login = async (req: Request, res: Response) => {
         { algorithm: "RS256", expiresIn: "7d" }
       );
 
-      res
+      return res
+        .status(200)
         .cookie("accessToken", accessToken, {
           httpOnly: true,
           maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -104,13 +102,13 @@ export const login = async (req: Request, res: Response) => {
           user_id: user.id,
         });
     } else {
-      res.status(401).json({
+      return res.status(401).json({
         message: "Wrong password",
       });
     }
   } catch (err) {
     console.log(err);
-    res.status(500).send({
+    return res.status(500).send({
       message: "Errors occur when finding user",
     });
   }
@@ -119,12 +117,12 @@ export const login = async (req: Request, res: Response) => {
 export const logout = (req: Request, res: Response) => {
   try {
     res.clearCookie("accessToken");
-    res.status(200).send({
+    return res.status(200).send({
       message: "Log out successfully",
     });
   } catch (err) {
     console.log(err);
-    res.status(500).send({
+    return res.status(500).send({
       message: "Errors occur when finding user",
     });
   }

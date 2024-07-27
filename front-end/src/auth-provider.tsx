@@ -21,7 +21,10 @@ export const AppContextProvider = ({
   const [isAuth, setAuth] = useState(false);
   useEffect(() => {
     checkAuth().then((res) => {
-      if (res && res.status != 401) setAuth(true);
+      if (res && res.status != 401) {
+        console.log("RES", res);
+        setAuth(true);
+      }
     });
   }, []);
 

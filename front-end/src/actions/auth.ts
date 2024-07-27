@@ -1,5 +1,3 @@
-
-
 export const login = async (username: string, password: string) => {
   try {
     const res = await fetch(`http://localhost:3001/login`, {
@@ -13,9 +11,9 @@ export const login = async (username: string, password: string) => {
         "content-type": "application/json",
       }),
     });
-    const data = await res.json();
-
-    return { status: res.status, data: data };
+    const status = res.status;
+    const response = await res.json();
+    return { status: status, data: response.data };
   } catch (err) {
     console.error(err);
   }
@@ -40,8 +38,9 @@ export const signup = async (
       }),
     });
     const data = await res.json();
+    const status = res.status;
 
-    return { status: res.status, data: data };
+    return { status: status, data: data };
   } catch (err) {
     console.error(err);
   }
@@ -56,8 +55,9 @@ export const logout = async () => {
       }),
     });
     const data = await res.json();
+    const status = res.status;
 
-    return { status: res.status, data: data };
+    return { status: status, data: data };
   } catch (err) {
     console.error(err);
   }
@@ -72,9 +72,10 @@ export const checkAuth = async () => {
         "content-type": "application/json",
       }),
     });
+    const status = res.status;
     const data = await res.json();
 
-    return { status: res.status, data: data };
+    return { status: status, data: data.message };
   } catch (err) {
     console.error(err);
   }
