@@ -52,7 +52,7 @@ const Navbar = () => {
 
             <li className="nav-item mx-1">
               <a className="nav-link text-white" href="#">
-                Help
+                Key
               </a>
             </li>
           </ul>

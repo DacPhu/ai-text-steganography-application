@@ -1,13 +1,10 @@
-import React from "react";
-import HeroSection from "../components/HeroSection.tsx";
+
+import Carousel from "../components/Carousel.tsx";
 
 const HomePage = () => {
   return (
     <>
-      <HeroSection
-        title="Welcome to the website"
-        description="This is a description of the website"
-      />
+      <Carousel />
     </>
   );
 };
