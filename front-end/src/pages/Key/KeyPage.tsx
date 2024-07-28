@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/Modal.css";
-import { getKeys } from "../../actions/manage-key";
+import { getKeys, createKey, deleteKey } from "../../actions/manage-key";
 
 type KeyAttributes = {
+  id: number;
   name: string;
-  created_at: string;
+  createdAt: string;
 };
 
 const KeyPage: React.FC = () => {
-  const [listKeys, setListKeys] = useState([]);
+  const [listKeys, setListKeys] = useState<KeyAttributes[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [keyName, setKeyName] = useState("");
+  const [keyToDelete, setKeyToDelete] = useState<number | null>(null);
 
   const handleShowCreateModal = () => setShowCreateModal(true);
   const handleCloseCreateModal = () => setShowCreateModal(false);
@@ -20,8 +22,27 @@ const KeyPage: React.FC = () => {
   const handleShowShareModal = () => setShowShareModal(true);
   const handleCloseShareModal = () => setShowShareModal(false);
 
-  const handleShowDeleteModal = () => setShowDeleteModal(true);
-  const handleCloseDeleteModal = () => setShowDeleteModal(false);
+  const handleShowDeleteModal = (keyId: number) => {
+    setKeyToDelete(keyId);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setKeyToDelete(null);
+    setShowDeleteModal(false);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric", // "2024"
+      month: "long", // "July"
+      day: "numeric", // "28"
+      hour: "2-digit", // "02"
+      minute: "2-digit", // "30"
+    };
+    return date.toLocaleDateString("en-US", options);
+  };
 
   useEffect(() => {
     const fetchKeys = async () => {
@@ -36,22 +57,36 @@ const KeyPage: React.FC = () => {
     fetchKeys();
   }, []);
 
-  const handleCreateKey = () => {
+  const handleCreateKey = async () => {
     console.log("Key Name:", keyName);
-    // Add logic to create the key
-    setShowCreateModal(false);
+    try {
+      const result = await createKey(keyName);
+      console.log("Create Key Result:", result);
+      const keys = await getKeys();
+      setListKeys(keys.data);
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error("Failed to create key:", error);
+    }
   };
 
   const handleShareKey = () => {
     console.log("Share Key");
-    // Add logic to share the key
     setShowShareModal(false);
   };
 
-  const handleDeleteKey = () => {
-    console.log("Delete Key");
-    // Add logic to delete the key
-    setShowDeleteModal(false);
+  const handleDeleteKey = async () => {
+    if (keyToDelete === null) return;
+
+    try {
+      const result = await deleteKey(keyToDelete);
+      console.log("Delete Key Result:", result);
+      setKeyToDelete(null);
+      setShowDeleteModal(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to delete key:", error);
+    }
   };
 
   const isModalOpen = showCreateModal || showShareModal || showDeleteModal;
@@ -77,24 +112,27 @@ const KeyPage: React.FC = () => {
         <div className="container-fluid bg-grey p-3">
           <div className="row px-3">
             <div className="col-4">Name</div>
-            <div className="col-4">Created at</div>
-            <div className="col-4">Action</div>
+            <div className="col-6">Created at</div>
+            <div className="col-2">Action</div>
           </div>
         </div>
         {listKeys.length > 0 ? (
-          listKeys.map((key: KeyAttributes, index: number) => (
-            <div className="container-fluid bg-light py-3" key={index}>
+          listKeys.map((key: KeyAttributes) => (
+            <div className="container-fluid bg-light py-3" key={key.id}>
               <div className="row p-3 member-item">
-                <div className="col text-color-1">{key.name}</div>
-                <div className="col text-color-1">{key.created_at}</div>
-                <div className="col text-color-1 d-flex">
+                <div className="col text-color-1" hidden>
+                  {key.id}
+                </div>
+                <div className="col-4 text-color-1">{key.name}</div>
+                <div className="col-6 text-color-1">{formatDate(key.createdAt)}</div>
+                <div className="col-2 text-color-1 d-flex">
                   <i
                     className="bi bi-share pe-4"
                     onClick={handleShowShareModal}
                   ></i>
                   <i
                     className="bi bi-trash pe-4"
-                    onClick={handleShowDeleteModal}
+                    onClick={() => handleShowDeleteModal(key.id)}
                   ></i>
                 </div>
               </div>
@@ -103,26 +141,12 @@ const KeyPage: React.FC = () => {
         ) : (
           <div className="container-fluid bg-light py-3">
             <div className="row p-3 member-item">
-              <div className="col text-color-1 text-center">No records found</div>
+              <div className="col text-color-1 text-center">
+                No records found
+              </div>
             </div>
           </div>
         )}
-        {/* <div className="container-fluid bg-light py-3">
-          <div className="row p-3 member-item">
-            <div className="col text-color-1">Name Key</div>
-            <div className="col text-color-1">Time</div>
-            <div className="col text-color-1 d-flex">
-              <i
-                className="bi bi-share pe-4"
-                onClick={handleShowShareModal}
-              ></i>
-              <i
-                className="bi bi-trash pe-4"
-                onClick={handleShowDeleteModal}
-              ></i>
-            </div>
-          </div>
-        </div> */}
       </div>
 
       {/* Create Key Modal */}

@@ -26,19 +26,21 @@ export const createKey = async (req: Request, res: Response) => {
     return res.status(422).send(errors.array());
   }
 
-  const { userId, key } = req.body;
+  const { keyName } = req.body;
 
   try {
-    const User = models.User;
-    const user = await User.findById(userId);
+    const user = req.user;
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(401).send("Unauthorized");
     }
+    const userId = user.id;
 
-    const Key = models.Key;
+    const Key = models.default.SecretKey;
+    const randomInt = Math.floor(Math.random() * 1000);
     const newKey = new Key({
-      user: userId,
-      key: key,
+      ownerId: userId,
+      name: keyName,
+      value: randomInt,
     });
 
     await newKey.save();
@@ -54,13 +56,13 @@ export const deleteKey = async (req: Request, res: Response) => {
   console.log(params);
 
   try {
-    const Key = models.Key;
-    const keyId = req.params.keyId;
-    const key = await Key.findById(keyId);
+    const Key = models.default.SecretKey;
+    const keyId = req.body.keyId;
+    const key = await Key.findByPk(keyId);
     if (!key) {
       return res.status(404).send("Key not found");
     }
-    await key.remove();
+    await key.destroy();
     return res.status(200).send("Key deleted successfully");
   } catch (error) {
     console.error("Error deleting key:", error);
@@ -76,4 +78,9 @@ export const sharingKey = async (req: Request, res: Response) => {
   }
 
   const { keyId, userId } = req.body;
+
+  try {
+    const Key = models.default.SecretKey;
+    const key = await Key.findById;
+  } catch (error) {}
 };

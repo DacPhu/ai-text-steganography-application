@@ -12,12 +12,12 @@ export const getKeys = async () => {
   return { status: res.status, data: data };
 };
 
-export const createKeys = async (
-  name: string,
+export const createKey = async (
+  keyName: string,
 ) => {
   try {
     const body = {
-      name: name,
+      keyName: keyName,
     };
 
     const res = await fetch(`http://localhost:3001/key`, {
@@ -30,19 +30,19 @@ export const createKeys = async (
     });
 
     const data = await res.json();
-
+    console.log(data);
     return { status: res.status, data: data };
   } catch (err) {
     console.error(err);
   }
 };
 
-export const delete_key = async (keyId: number) => {
+export const deleteKey = async (keyId: number) => {
   const body = {
     keyId: keyId,
   };
   try {
-    const res = await fetch(`http://localhost:3001/key/`, {
+    const res = await fetch(`http://localhost:3001/key`, {
       credentials: "include",
       method: "DELETE",
       body: JSON.stringify(body),
@@ -51,7 +51,7 @@ export const delete_key = async (keyId: number) => {
       }),
     });
 
-    const data = await res.json();
+    const data = await res.text();
 
     return { status: res.status, data: data };
   } catch (err) {
