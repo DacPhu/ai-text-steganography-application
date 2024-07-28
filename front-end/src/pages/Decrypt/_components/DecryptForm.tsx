@@ -6,6 +6,8 @@ const DecryptForm = () => {
   const [seedScheme, setSeedScheme] = useState("sha_left_hash");
   const [windowLength, setWindowLength] = useState(1);
   const [text, setText] = useState("");
+  const [haveResult, setHaveResult] = useState(false);
+  const [result, setResult] = useState("");
   // const [file, setFile] = useState<File | null>(null);
 
   const handleMessageBaseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -29,9 +31,17 @@ const DecryptForm = () => {
   //   setFile(file);
   // };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSubmit = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    sendDecryptCommand(text, messageBase, seedScheme, windowLength);
+    const res = await sendDecryptCommand(text, messageBase, seedScheme, windowLength);
+    if (res && res.status === 200) {
+      let content = "";
+      for (const key in res.data) {
+        content += `${key}: ${res.data[key]}\n`;
+      }
+      setResult(content);
+      setHaveResult(true);
+    }
   };
 
   return (
@@ -111,7 +121,22 @@ const DecryptForm = () => {
         </div>
       </div>
 
-      <div className="hidden">Result</div>
+      {haveResult && (
+        <>
+          <div className="card m-3 p-3">
+            <h5>Result</h5>
+            <div className="form-group">
+              <label>Text</label>
+              <textarea
+                className="form-control"
+                rows={5}
+                value={result}
+                readOnly
+              />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

@@ -25,7 +25,7 @@ const EncryptForm = () => {
   const [haveResult, setHaveResult] = useState(true);
   const [tokensInfo, setTokensInfo] = useState<TokenInfo[]>([]);
   const [messageRate, setMessageRate] = useState(0);
-
+  const [text, setText] = useState("");
   // const [file, setFile] = useState<File | null>(null);
 
   const handleDeltaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,10 +97,8 @@ const EncryptForm = () => {
 
     if (result.status === 200) {
       setHaveResult(false);
-
+      setText(result.data.text);
       setTokensInfo(result.data.tokensInfo);
-      console.log("Data:", result.data.tokensInfo);
-      console.log(tokensInfo);
       setMessageRate(result.data.msgRate);
     }
   };
@@ -261,21 +259,26 @@ const EncryptForm = () => {
           <div className="col-md-8">
             <div className="card m-3 p-3">
               <h3>
-                  <b> Result </b> (shown in base):
+                <b> Result: </b>
               </h3>
-              <p> Message Rate: {messageRate} %</p>
-              {/* <p> {textResult}</p> */}
+              <p> Message Rate: {messageRate.toPrecision(4)} %</p>
+              <p> {text}</p>
+            </div>
+          </div>
+          <div className="col-md-8">
+            <div className="card m-3 p-3">
+              <h5>
+                Shown in base:
+              </h5>
 
               <TokenHighlight tokens_info={tokensInfo} isByte={true} />
             </div>
           </div>
           <div className="col-md-8">
             <div className="card m-3 p-3">
-              <h3>
-              <b> Result </b> (shown in byte):
-              </h3>
-              <p> Message Rate: {messageRate} %</p>
-              {/* <p> {textResult}</p> */}
+              <h5>
+                Shown in byte:
+              </h5>
 
               <TokenHighlight tokens_info={tokensInfo} isByte={false} />
             </div>

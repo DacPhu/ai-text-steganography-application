@@ -16,26 +16,34 @@ export const decrypt = async (req: Request, res: Response) => {
   try {
     const rawData = {
       text: text,
+      gen_model: "gpt2",
       msg_base: parseInt(msg_base),
       seed_scheme: seed_scheme,
-      private_key: 0,
       window_length: parseInt(window_length),
+      private_key: 0,
     };
 
-    // Send encoded message and prompt to another server via API
-    const result = await axios.post("https://localhost:6969/decrypt", rawData, {
+    const result = await fetch("http://localhost:6969/decrypt", {
+      method: "POST",
       headers: {
         "content-Type": "application/json",
       },
+      body: JSON.stringify(rawData),
     });
 
     // Decode the result from the server
-    const decodedResult = Buffer.from(result.data, "base64").toString();
-    console.log("Decoded Result:", decodedResult);
+    const data = JSON.parse(await result.text());
+    console.log("Decoded Data:", data);
+
+    for (let key in data) {
+      const decodedItem = atob(data[key]);
+      data[key] = decodedItem;
+    }
+    console.log(data)
     // Handle the result from the server
-    res.status(200).send(result.data);
+    return res.status(200).send(data);
   } catch (error) {
     console.error("Error sending data to server:", error);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 };

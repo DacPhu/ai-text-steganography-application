@@ -1,10 +1,8 @@
-import React from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import { AppContext } from "../../auth-provider";
 import { signup } from "../../actions/auth";
 import { useNavigate } from "react-router-dom";
 import "../../styles/LoginForm.css";
@@ -57,9 +55,7 @@ const defaultValues: Partial<SignUpFormValues> = {
 };
 
 const SignupForm = () => {
-  const { isAuth, setAuth } = React.useContext(AppContext);
   const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -71,18 +67,12 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (values: SignUpFormValues) => {
-    console.log("HERE")
     try {
       const res = await signup(values.username, values.password, values.email);
       if (res) {
         if (res.status === 201) {
-          setAuth(true);
-          navigate("/");
-          localStorage.setItem("is_admin", res.data.is_admin);
-          localStorage.setItem("is_tutor", res.data.is_tutor);
-          localStorage.setItem("is_student", res.data.is_student);
-          localStorage.setItem("is_supporter", res.data.is_supporter);
           toast.success(res.data.message);
+          navigate("/login");
         } else {
           toast.error(res.data.message);
         }
