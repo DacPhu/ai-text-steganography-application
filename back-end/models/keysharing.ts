@@ -5,7 +5,6 @@ interface KeySharingAttributes {
   id: number;
   keyId: number;
   userId: number;
-  permission: number;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
@@ -49,11 +48,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      permission: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+      }
     },
     {
       sequelize,

@@ -1,29 +1,8 @@
-export const getKeys = async () => {
-  const res = await fetch(`http://localhost:3001/key`, {
-    credentials: "include",
-    method: "GET",
-    headers: new Headers({
-      "content-type": "application/json",
-    }),
-  });
-
-  const data = await res.json();
-
-  return { status: res.status, data: data };
-};
-
-export const createKey = async (
-  keyName: string,
-) => {
+export const getKeysShared = async () => {
   try {
-    const body = {
-      keyName: keyName,
-    };
-
-    const res = await fetch(`http://localhost:3001/key`, {
+    const res = await fetch(`http://localhost:3001/key/shared`, {
       credentials: "include",
-      method: "POST",
-      body: JSON.stringify(body),
+      method: "GET",
       headers: new Headers({
         "content-type": "application/json",
       }),
@@ -37,12 +16,12 @@ export const createKey = async (
   }
 };
 
-export const deleteKey = async (keyId: number) => {
+export const deleteKeyShared = async (keyId: number) => {
   const body = {
     keyId: keyId,
   };
   try {
-    const res = await fetch(`http://localhost:3001/key`, {
+    const res = await fetch(`http://localhost:3001/key/shared`, {
       credentials: "include",
       method: "DELETE",
       body: JSON.stringify(body),
