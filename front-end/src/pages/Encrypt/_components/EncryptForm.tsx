@@ -23,11 +23,9 @@ const EncryptForm = () => {
   const [prompt, setPrompt] = useState("");
   const [message, setMessage] = useState("");
   const [haveResult, setHaveResult] = useState(true);
-  const [content, setContent] = useState<{
-    text: string;
-    msgRate: number;
-    tokens_info: Array<TokenInfo>;
-  }>({ text: "", msgRate: 0, tokens_info: [] });
+  const [tokensInfo, setTokensInfo] = useState<TokenInfo[]>([]);
+  const [messageRate, setMessageRate] = useState(0);
+
   // const [file, setFile] = useState<File | null>(null);
 
   const handleDeltaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,8 +98,10 @@ const EncryptForm = () => {
     if (result.status === 200) {
       setHaveResult(false);
 
-      setContent(result.data);
-      console.log(result.data.tokenInfo[0]);
+      setTokensInfo(result.data.tokensInfo);
+      console.log("Data:", result.data.tokensInfo);
+      console.log(tokensInfo);
+      setMessageRate(result.data.msgRate);
     }
   };
 
@@ -184,11 +184,7 @@ const EncryptForm = () => {
               >
                 <option value="2">2</option>
                 <option value="4">4</option>
-                <option value="8">8</option>
                 <option value="16">16</option>
-                <option value="32">32</option>
-                <option value="64">64</option>
-                <option value="128">128</option>
                 <option value="256">256</option>
               </select>
             </div>
@@ -258,13 +254,34 @@ const EncryptForm = () => {
         </div>
       </div>
 
-      <div hidden={haveResult} className="col-md-8">
-        <div className="card m-3 p-3">
-          {/* <p>{content.text}</p> */}
-          <p> {content.text}</p>
-          <TokenHighlight tokens_info={content.tokens_info} />
-        </div>
-      </div>
+      {haveResult ? (
+        <div className="hidden">Result</div>
+      ) : (
+        <>
+          <div className="col-md-8">
+            <div className="card m-3 p-3">
+              <h3>
+                  <b> Result </b> (shown in base):
+              </h3>
+              <p> Message Rate: {messageRate} %</p>
+              {/* <p> {textResult}</p> */}
+
+              <TokenHighlight tokens_info={tokensInfo} isByte={true} />
+            </div>
+          </div>
+          <div className="col-md-8">
+            <div className="card m-3 p-3">
+              <h3>
+              <b> Result </b> (shown in byte):
+              </h3>
+              <p> Message Rate: {messageRate} %</p>
+              {/* <p> {textResult}</p> */}
+
+              <TokenHighlight tokens_info={tokensInfo} isByte={false} />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

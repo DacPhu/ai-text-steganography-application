@@ -62,14 +62,14 @@ export const encrypt = async (req: Request, res: Response) => {
     console.log("Data:", data);
     const text: string = data.text;
     const msgRate: number = parseFloat(data.msg_rate) * 100;
-    const tokenInfo: Array<string> = data.tokens_info;
+    const tokensInfo: any = data.tokens_info;
 
     console.log(msgRate);
-    console.log(tokenInfo);
+    console.log(tokensInfo);
     res.status(200).send({
       text: text,
       msgRate: msgRate,
-      tokenInfo: tokenInfo,
+      tokensInfo: tokensInfo,
     });
   } catch (error) {
     console.error("Error sending data to server:", error);
