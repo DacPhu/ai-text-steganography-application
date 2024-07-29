@@ -7,8 +7,9 @@ import {
 
 type KeySharedAttributes = {
   id: number;
+  keyName: string;
   ownerName: string;
-  createdAt: string;
+  time: string;
 };
 
 const KeyShared: React.FC = () => {
@@ -43,7 +44,17 @@ const KeyShared: React.FC = () => {
       try {
         const keys = await getKeysShared();
         if (keys) {
-          setListKeys(keys.data);
+          const convertedKeys: KeySharedAttributes[] = keys.data.map(
+            (key: any) => {
+              return {
+                id: key.id,
+                keyName: key.name,
+                ownerName: key.usernameSharedBy,
+                time: key.updatedAt,
+              };
+            }
+          );
+          setListKeys(convertedKeys);
         }
       } catch (error) {
         console.error("Failed to fetch keys:", error);
@@ -81,8 +92,9 @@ const KeyShared: React.FC = () => {
         </div>
         <div className="container-fluid bg-grey p-3">
           <div className="row px-3">
-            <div className="col-4">Name</div>
-            <div className="col-6">Created at</div>
+            <div className="col-3">Owner</div>
+            <div className="col-3">Key Name</div>
+            <div className="col-4">Update at</div>
             <div className="col-2">Action</div>
           </div>
         </div>
@@ -90,13 +102,9 @@ const KeyShared: React.FC = () => {
           listKeys.map((key: KeySharedAttributes) => (
             <div className="container-fluid bg-light py-3" key={key.id}>
               <div className="row p-3 member-item">
-                <div className="col text-color-1" hidden>
-                  {key.id}
-                </div>
-                <div className="col-4 text-color-1">{key.ownerName}</div>
-                <div className="col-6 text-color-1">
-                  {formatDate(key.createdAt)}
-                </div>
+                <div className="col-3 text-color-1">{key.ownerName}</div>
+                <div className="col-3 text-color-1">{key.keyName}</div>
+                <div className="col-4 text-color-1">{formatDate(key.time)}</div>
                 <div className="col-2 text-color-1 d-flex">
                   <i
                     className="bi bi-trash pe-4"

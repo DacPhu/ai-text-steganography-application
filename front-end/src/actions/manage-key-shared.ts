@@ -9,7 +9,9 @@ export const getKeysShared = async () => {
     });
 
     const data = await res.json();
-    console.log(data);
+    if (data.status === 401) {
+      return { status: 401, data: [] };
+    }
     return { status: res.status, data: data };
   } catch (err) {
     console.error(err);

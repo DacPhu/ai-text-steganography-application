@@ -9,7 +9,7 @@ import {
 
 type KeyAttributes = {
   id: number;
-  name: string;
+  keyName: string;
   createdAt: string;
 };
 
@@ -62,7 +62,16 @@ const KeyOwner: React.FC = () => {
     const fetchKeys = async () => {
       try {
         const keys = await getKeys();
-        setListKeys(keys.data);
+        if (keys) {
+          const convertedKeys: KeyAttributes[] = keys.data.map((key: any) => {
+            return {
+              id: key.id,
+              keyName: key.name,
+              createdAt: key.createdAt,
+            };
+          });
+          setListKeys(convertedKeys);
+        }
       } catch (error) {
         console.error("Failed to fetch keys:", error);
       }
@@ -93,7 +102,7 @@ const KeyOwner: React.FC = () => {
       setKeyToShare(null);
       setUsernameToShare("");
       setShowShareModal(false);
-    //   window.location.reload();
+      //   window.location.reload();
     } catch (error) {
       console.error("Failed to share key:", error);
     }
@@ -147,7 +156,7 @@ const KeyOwner: React.FC = () => {
                 <div className="col text-color-1" hidden>
                   {key.id}
                 </div>
-                <div className="col-4 text-color-1">{key.name}</div>
+                <div className="col-4 text-color-1">{key.keyName}</div>
                 <div className="col-6 text-color-1">
                   {formatDate(key.createdAt)}
                 </div>

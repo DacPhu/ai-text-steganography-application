@@ -2,6 +2,7 @@ const models = require("../models");
 const { validationResult } = require("express-validator");
 
 import { Request, Response } from "express";
+import { where } from "sequelize";
 
 export const getKey = async (req: Request, res: Response) => {
   try {
@@ -10,8 +11,9 @@ export const getKey = async (req: Request, res: Response) => {
       return res.status(401).send("Unauthorized");
     }
     const userId = user.id;
+    console.log(userId);
     const Key = models.default.SecretKey;
-    const keys = await Key.findAll({ owner: userId });
+    const keys = await Key.findAll({ where: { ownerId: userId } });
     return res.status(200).send(keys);
   } catch (error) {
     console.error("Error retrieving keys:", error);
@@ -163,8 +165,29 @@ export const getKeysShared = async (req: Request, res: Response) => {
   }
   const userId = user.id;
 
-  const Key = models.default.SharingKey;
-  const keys = await Key.findAll({ userId });
+  const KeySharing = models.default.KeySharing;
+  const Key = models.default.SecretKey;
+
+  const keys = await Key.findAll({
+    include: [
+      {
+        model: KeySharing,
+        where: { userId },
+        required: true,
+      },
+    ],
+  });
+
+  const User = models.default.User;
+
+  for (let key of keys) {
+    const ownerId = key.dataValues.ownerId;
+    const user = await User.findOne({ where: { id: ownerId } });
+    const username = user.username;
+    key.setDataValue("usernameSharedBy", username);
+  }
+
+  console.log(keys);
 
   return res.status(200).send(keys);
 };

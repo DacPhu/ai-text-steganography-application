@@ -7,8 +7,8 @@ import KeySharing from "./_components/KeySharing";
 const KeyPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("KeyOwner");
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
+  const handleTabToggle = (tab: string) => {
+    setActiveTab((prevTab) => (prevTab === tab ? "" : tab));
   };
 
   return (
@@ -18,7 +18,7 @@ const KeyPage: React.FC = () => {
           className={`btn btn-secondary ${
             activeTab === "KeyOwner" ? "active" : ""
           }`}
-          onClick={() => handleTabChange("KeyOwner")}
+          onClick={() => handleTabToggle("KeyOwner")}
         >
           Key Owner
         </button>
@@ -26,7 +26,7 @@ const KeyPage: React.FC = () => {
           className={`btn btn-secondary ${
             activeTab === "KeyShared" ? "active" : ""
           }`}
-          onClick={() => handleTabChange("KeyShared")}
+          onClick={() => handleTabToggle("KeyShared")}
         >
           Key Shared
         </button>
@@ -34,7 +34,7 @@ const KeyPage: React.FC = () => {
           className={`btn btn-secondary ${
             activeTab === "KeySharing" ? "active" : ""
           }`}
-          onClick={() => handleTabChange("KeySharing")}
+          onClick={() => handleTabToggle("KeySharing")}
         >
           Key Sharing
         </button>
@@ -48,14 +48,12 @@ const KeyPage: React.FC = () => {
 
       {activeTab === "KeyShared" && (
         <div>
-          {" "}
           <KeyShared />
         </div>
       )}
 
       {activeTab === "KeySharing" && (
         <div>
-          {" "}
           <KeySharing />
         </div>
       )}
