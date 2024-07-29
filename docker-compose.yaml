@@ -15,18 +15,18 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - DATABASE_URL=postgres://user:password@db:5432/mydatabase
+      - DATABASE_URL=postgres://dacphu:dacphu@db:5432/db-text-steganography
     depends_on:
-      - db
+      - database
 
-  db:
+  database:
     image: postgres:@lastest
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: dacphu
       POSTGRES_PASSWORD: dacphu
-      POSTGRES_DB: text-steganography
+      POSTGRES_DB: db-text-steganography
 
   model:
     build:
