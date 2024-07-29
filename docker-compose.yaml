@@ -1,0 +1,35 @@
+version: "1.0"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/mydatabase
+    depends_on:
+      - db
+
+  db:
+    image: postgres:@lastest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dacphu
+      POSTGRES_PASSWORD: dacphu
+      POSTGRES_DB: text-steganography
+
+  model:
+    build:
+      context: ./model
+    ports:
+      - "6969:6969"

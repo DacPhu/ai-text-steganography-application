@@ -220,7 +220,9 @@ const EncryptForm = () => {
                   value={seedScheme}
                   onChange={handleSeedSchemeChange}
                 >
-                  <option value="sha_left_hash">SHA Left Hash</option>
+                  <option value="sha_left_hash" className="text-center">
+                    SHA Left Hash
+                  </option>
                 </select>
               </div>
             </div>
@@ -235,8 +237,14 @@ const EncryptForm = () => {
                 value={typeOfKey}
                 onChange={handleTypeOfKeyChange}
               >
-                <option value="owner"> My key </option>
-                <option value="shared"> Share to me</option>
+                <option value="owner" className="text-center">
+                  {" "}
+                  My key{" "}
+                </option>
+                <option value="shared" className="text-center">
+                  {" "}
+                  Share to me
+                </option>
               </select>
               {listKeys.length > 0 ? (
                 <>
