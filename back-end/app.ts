@@ -24,9 +24,11 @@ app.use(cookieParser());
 // Routes
 import authRouter from "./routes/auth.route";
 import processingRouter from "./routes/processing.route";
+import keyRouter from "./routes/key.route";
 
 app.use("/", authRouter);
 app.use("/processing", processingRouter);
+app.use("/key", keyRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

@@ -1,4 +1,3 @@
-import React from "react";
 import { useContext } from "react";
 import "../styles/Navbar.css";
 import { Link } from "react-router-dom";
@@ -55,7 +54,7 @@ const Navbar = () => {
               </a>
             </li>
             <li className="nav-item mx-1">
-              <a className="nav-link text-white" href="#">
+              <a className="nav-link text-white" href="/key">
                 Key
               </a>
             </li>

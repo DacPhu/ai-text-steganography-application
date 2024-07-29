@@ -1,9 +1,8 @@
-
 export const sendEncryptCommand = async (
   prompt: string,
   message: string,
-  // file: File | null,
   delta: number,
+  secretKey: number,
   messageBase: number,
   startPosition: number,
   seedScheme: string,
@@ -16,6 +15,7 @@ export const sendEncryptCommand = async (
   formData.append("prompt", prompt);
   formData.append("msg", message);
   formData.append("delta", delta.toString());
+  formData.append("private_key", secretKey.toString());
   formData.append("msg_base", messageBase.toString());
   formData.append("start_pos", startPosition.toString());
   formData.append("seed_scheme", seedScheme);
@@ -23,11 +23,6 @@ export const sendEncryptCommand = async (
   formData.append("max_new_tokens_ratio", maxNewTokensRatio.toString());
   formData.append("num_beams", numBeams.toString());
   formData.append("repetition_penalty", repetitionPenalty.toString());
-
-  // if (file) {
-  //   formData.append("file", file);
-  // }
-  // ...
 
   const res = await fetch(`http://localhost:3001/processing/encrypt`, {
     credentials: "include",
@@ -42,8 +37,8 @@ export const sendEncryptCommand = async (
 
 export const sendDecryptCommand = async (
   text: string,
-  // file: File | null,
   messageBase: number,
+  secretKey: number,
   seedScheme: string,
   windowLength: number
 ) => {
@@ -53,9 +48,7 @@ export const sendDecryptCommand = async (
     formData.append("msg_base", messageBase.toString());
     formData.append("seed_scheme", seedScheme);
     formData.append("window_length", windowLength.toString());
-    // if (file) {
-    //   formData.append("file", file);
-    // }
+    formData.append("private_key", secretKey.toString());
 
     const res = await fetch(`http://localhost:3001/processing/decrypt`, {
       credentials: "include",

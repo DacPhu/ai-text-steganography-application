@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "jwt-key": "openssl genrsa -out jwt.key 2048; openssl rsa -in private-key.pem -pubout -out public-key.pem",
+    "jwt-key": "openssl genrsa -out jwt.key 2048; openssl rsa -in jwt.key -pubout -out jwt.key.pub",
     "db": "ts-node database/connection.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",

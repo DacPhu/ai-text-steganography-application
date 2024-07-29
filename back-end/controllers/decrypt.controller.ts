@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const { validationResult, matchedData } = require("express-validator");
-import axios from "axios";
 
 import { Request, Response } from "express";
 
@@ -11,31 +10,39 @@ export const decrypt = async (req: Request, res: Response) => {
     return res.status(422).send(errors.array());
   }
 
-  const { text, msg_base, seed_scheme, window_length } = req.body;
+  const { text, msg_base, seed_scheme, window_length, private_key } = req.body;
 
   try {
     const rawData = {
       text: text,
+      gen_model: "gpt2",
       msg_base: parseInt(msg_base),
       seed_scheme: seed_scheme,
-      private_key: 0,
       window_length: parseInt(window_length),
+      private_key: parseInt(private_key),
     };
 
-    // Send encoded message and prompt to another server via API
-    const result = await axios.post("https://localhost:6969/decrypt", rawData, {
+    const result = await fetch("http://localhost:6969/decrypt", {
+      method: "POST",
       headers: {
         "content-Type": "application/json",
       },
+      body: JSON.stringify(rawData),
     });
 
     // Decode the result from the server
-    const decodedResult = Buffer.from(result.data, "base64").toString();
-    console.log("Decoded Result:", decodedResult);
+    const data = JSON.parse(await result.text());
+    console.log("Decoded Data:", data);
+
+    for (let key in data) {
+      const decodedItem = atob(data[key]);
+      data[key] = decodedItem;
+    }
+    console.log(data);
     // Handle the result from the server
-    res.status(200).send(result.data);
+    return res.status(200).send(data);
   } catch (error) {
     console.error("Error sending data to server:", error);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 };

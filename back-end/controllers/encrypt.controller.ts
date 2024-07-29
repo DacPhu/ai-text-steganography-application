@@ -3,10 +3,6 @@ const { validationResult, matchedData } = require("express-validator");
 
 import { Request, Response } from "express";
 
-import axios from "axios";
-import { parse } from "path";
-import { encode } from "punycode";
-
 export const encrypt = async (req: Request, res: Response) => {
   const errors = validationResult(req);
 
@@ -18,6 +14,7 @@ export const encrypt = async (req: Request, res: Response) => {
     prompt,
     delta,
     msg_base,
+    private_key,
     start_pos,
     seed_scheme,
     window_length,
@@ -38,12 +35,11 @@ export const encrypt = async (req: Request, res: Response) => {
       msg_base: parseInt(msg_base),
       seed_scheme: seed_scheme,
       window_length: parseInt(window_length),
-      private_key: 0,
+      private_key: parseInt(private_key),
       max_new_tokens_ratio: parseFloat(max_new_tokens_ratio),
       num_beams: parseFloat(num_beams),
       repetition_penalty: parseInt(repetition_penalty),
     };
-
 
     // Send the POST request
     const result = await fetch("http://localhost:6969/encrypt", {

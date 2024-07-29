@@ -5,7 +5,7 @@ interface SecretKeyAttributes {
   id: number;
   ownerId: number;
   name: string;
-  live_time: number;
+  value: number;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
@@ -21,7 +21,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     id!: number;
     ownerId!: number;
     name!: string;
-    live_time!: number;
+    value!: number;
 
     static associate(models: any) {
       SecretKey.belongsTo(models.User, {
@@ -56,7 +56,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       name: {
         type: DataTypes.STRING,
       },
-      live_time: {
+      value:{
         type: DataTypes.INTEGER,
       },
     },
