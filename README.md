@@ -1,25 +1,90 @@
-# Build Front End Images
+# Production settings
+
+## Start Application
 
 ```shell
-  docker build ./front-end --tag "Front-end"
+  docker-compose up --build -d
 ```
 
-# Build Model Images
+# Development Settings
+
+## Execute client application
+
+### Navigate to source directory
 
 ```shell
-  docker build ./back-end --tag "Back-end"
+  cd back-end
 ```
 
-# Build Model Images
+### Install require packages
 
 ```shell
-  docker build ./model --tag "Model"
+  npm install --save-dev
 ```
 
-# Start Application
+### Run client application
 
 ```shell
-  docker-compose up -d
+  npm run dev
+```
+
+## Execute server application
+
+### Navigate to source directory
+
+```shell
+  cd back-end
+```
+
+### Install require packages
+
+```shell
+  npm install --save-dev
+```
+
+### Create asymmetrical keys
+
+```shell
+  openssl genrsa -out jwt.key 2048;
+  openssl rsa -in jwt.key -pubout -out jwt.key.pub
+```
+
+### Migrate database schema
+
+```shell
+  npm run db
+```
+
+### Run server application
+
+```shell
+  npm run dev
+```
+
+## Execute Server Model
+
+### Create new virtual environment
+
+```shell
+  conda create -n "ai-text-steganography"
+```
+
+### Activate virtual environment
+
+```shell
+  conda activate ai-text-steganography
+```
+
+### Install require packages
+
+```shell
+  pip install -r requirements.txt
+```
+
+### Run FastAPI
+
+```shell
+  python api.py
 ```
 
 # References

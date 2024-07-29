@@ -3,7 +3,7 @@ version: "1.0"
 services:
   frontend:
     build:
-      context: ./frontend
+      context: ./front-end
     ports:
       - "5173:5173"
     depends_on:
@@ -11,16 +11,17 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./back-end
     ports:
       - "3001:3001"
     environment:
       - DATABASE_URL=postgres://dacphu:dacphu@db:5432/db-text-steganography
     depends_on:
       - database
+      - model
 
   database:
-    image: postgres:@lastest
+    image: postgres:15
     ports:
       - "5432:5432"
     environment:
