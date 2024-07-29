@@ -5,32 +5,41 @@ services:
     build:
       context: ./front-end
     ports:
-      - "5173:5173"
+      - "5172:5173"
     depends_on:
       - backend
+
+  database:
+    image: postgres:15
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_USER: dacphu
+      POSTGRES_PASSWORD: dacphu
+      POSTGRES_DB: db-text-steganography
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U dacphu -p 5432 -d db-text-steganography"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 0s
 
   backend:
     build:
       context: ./back-end
     ports:
-      - "3001:3001"
+      - "2999:3001"
     environment:
-      - DATABASE_URL=postgres://dacphu:dacphu@db:5432/db-text-steganography
+      - DATABASE_URL=postgresql://dacphu:dacphu@database:5432/db-text-steganography
     depends_on:
       - database
       - model
-
-  database:
-    image: postgres:15
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: dacphu
-      POSTGRES_PASSWORD: dacphu
-      POSTGRES_DB: db-text-steganography
 
   model:
     build:
       context: ./model
     ports:
-      - "6969:6969"
+      - "6968:6969"
