@@ -21,7 +21,7 @@ module.exports = {
     password: "dacphu",
     database: "db-text-steganography",
     port: 5432,
-    host: "database",
+    host: "databasePostgres",
     dialect: "postgresql",
   },
 };

@@ -4,13 +4,30 @@ services:
   frontend:
     build:
       context: ./front-end
+      dockerfile: Dockerfile
     ports:
       - "5172:5173"
     depends_on:
       - backend
 
+  backend:
+    build:
+      context: ./back-end
+    ports:
+      - "2999:3001"
+    volumes:
+      - ./back-end:/server
+      - app-server-v-node_modules:/server/node_modules
+    environment:
+      - DATABASE_URL=postgresql://dacphu:dacphu@databasePostgres:5432/db-text-steganography
+    depends_on:
+      - database:
+          condition: service_healthy
+      - model
+
   database:
     image: postgres:15
+    container_name: "databasePostgres"
     ports:
       - "5431:5432"
     environment:
@@ -18,7 +35,7 @@ services:
       POSTGRES_PASSWORD: dacphu
       POSTGRES_DB: db-text-steganography
     volumes:
-      - ./database:/var/lib/postgresql/data
+      - database-v:/var/lib/postgresql/data
     healthcheck:
       test:
         ["CMD-SHELL", "pg_isready -U dacphu -p 5432 -d db-text-steganography"]
@@ -27,19 +44,14 @@ services:
       retries: 5
       start_period: 0s
 
-  backend:
-    build:
-      context: ./back-end
-    ports:
-      - "2999:3001"
-    environment:
-      - DATABASE_URL=postgresql://dacphu:dacphu@database:5432/db-text-steganography
-    depends_on:
-      - database
-      - model
-
   model:
     build:
       context: ./model
     ports:
       - "6968:6969"
+
+volumes:
+  app-server-v:
+    name: "app-server-v-node-modules"
+  database-v:
+    name: "database-v"
