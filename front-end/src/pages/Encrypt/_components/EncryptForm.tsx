@@ -3,6 +3,7 @@ import { sendEncryptCommand } from "../../../actions/get";
 import { getKeys } from "../../../actions/manage-key-owner";
 import { getKeysShared } from "../../../actions/manage-key-shared";
 import TokenHighlight from "./TokenHightLight";
+import Slider from "@mui/material/Slider";
 
 type TokenInfo = {
   token: string;
@@ -25,7 +26,8 @@ const EncryptForm = () => {
   const [startPosition, setStartPosition] = useState(0);
   const [seedScheme, setSeedScheme] = useState("sha_left_hash");
   const [windowLength, setWindowLength] = useState(1);
-  const [maxNewTokensRatio, setMaxNewTokensRatio] = useState(1);
+  const [minNewTokensRatio, setMinNewTokensRatio] = useState(20);
+  const [maxNewTokensRatio, setMaxNewTokensRatio] = useState(37);
   const [numBeams, setNumBeams] = useState(1);
   const [repetitionPenalty, setRepetitionPenalty] = useState(2);
   const [prompt, setPrompt] = useState("");
@@ -37,13 +39,21 @@ const EncryptForm = () => {
   const [typeOfKey, setTypeOfKey] = useState("owner");
   const [secretKey, setSecretKey] = useState(0);
   const [listKeys, setListKeys] = useState<KeyAttributes[]>([]);
-  // const [file, setFile] = useState<File | null>(null);
+
+  const [range, setRange] = useState<number[]>([20, 37]);
+
+  const handleRangeChange = (event: Event, newValue: number[]) => {
+    setRange(newValue as number[]);
+    setMinNewTokensRatio(newValue[0]);
+    setMaxNewTokensRatio(newValue[1]);
+  };
 
   const handleTypeOfKeyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTypeOfKey(e.target.value);
     if (e.target.value === "owner") {
       getKeys().then((res) => {
         setListKeys(res.data);
+        console.log("KEY", res.data);
       });
     } else {
       getKeysShared().then((res) => {
@@ -79,12 +89,6 @@ const EncryptForm = () => {
     setWindowLength(parseInt(e.target.value));
   };
 
-  const handleMaxNewTokensRatioChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setMaxNewTokensRatio(parseFloat(e.target.value));
-  };
-
   const handleNumBeamsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNumBeams(parseInt(e.target.value));
   };
@@ -108,12 +112,13 @@ const EncryptForm = () => {
     const result = await sendEncryptCommand(
       prompt,
       message,
-      secretKey,
       delta,
+      secretKey,
       messageBase,
       startPosition,
       seedScheme,
       windowLength,
+      minNewTokensRatio,
       maxNewTokensRatio,
       numBeams,
       repetitionPenalty
@@ -193,7 +198,7 @@ const EncryptForm = () => {
             </div>
             <div className="text-center mt-2">{delta}</div>
 
-            <div className="row">
+            <div className="row ">
               <div className="form-group col-5 text-center">
                 <label>
                   {" "}
@@ -227,55 +232,61 @@ const EncryptForm = () => {
               </div>
             </div>
 
-            <div className="form-group mt-3">
-              <label>
-                {" "}
-                <h6>Secret Key:</h6>{" "}
-              </label>
-              <select
-                className="ms-5 text-center p-1"
-                value={typeOfKey}
-                onChange={handleTypeOfKeyChange}
-              >
-                <option value="owner" className="text-center">
+            <div className="row py-3">
+              <div className="form-group mt-3">
+                <label>
                   {" "}
-                  My key{" "}
-                </option>
-                <option value="shared" className="text-center">
-                  {" "}
-                  Share to me
-                </option>
-              </select>
-              {listKeys.length > 0 ? (
-                <>
-                  <select
-                    className="ms-5 p-1 text-center"
-                    value={secretKey}
-                    onChange={handleSecretKeyChange}
-                  >
-                    {listKeys.map((key) => (
-                      <option key={key.id} value={key.value}>
-                        {key.name}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              ) : (
-                <span className="ms-5"> No key found </span>
-              )}
+                  <h6>Secret Key:</h6>{" "}
+                </label>
+                <select
+                  className="ms-5 text-center p-1"
+                  value={typeOfKey}
+                  onChange={handleTypeOfKeyChange}
+                >
+                  <option value="owner" className="text-center">
+                    {" "}
+                    My key{" "}
+                  </option>
+                  <option value="shared" className="text-center">
+                    {" "}
+                    Share to me
+                  </option>
+                </select>
+                {listKeys.length > 0 ? (
+                  <>
+                    <select
+                      className="ms-5 p-1 text-center"
+                      value={secretKey}
+                      onChange={handleSecretKeyChange}
+                    >
+                      {listKeys.map((key) => (
+                        <option key={key.id} value={key.value}>
+                          {key.name}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                ) : (
+                  <span className="ms-5"> No key found </span>
+                )}
+              </div>
             </div>
 
-            <div className="form-group py-2">
+            <div className="row py-3">
               <label>
                 {" "}
-                <h6>Start position</h6>{" "}
+                <h6 style={{ display: "inline" }}>New tokens ratio</h6>{" "}
+                <span className="ms-2" style={{ display: "inline" }}>
+                  [ {minNewTokensRatio} - {maxNewTokensRatio} ]
+                </span>
               </label>
-              <input
-                type="number"
-                className="form-control"
-                min={0}
-                value={startPosition}
-                onChange={handleStartPositionChange}
+              <Slider
+                className="mx-auto"
+                style={{ width: "80%" }}
+                getAriaLabel={() => "Temperature range"}
+                value={range}
+                onChange={handleRangeChange}
+                valueLabelDisplay="auto"
               />
             </div>
 
@@ -293,16 +304,17 @@ const EncryptForm = () => {
                   onChange={handleWindowLengthChange}
                 />
               </div>
-              <div className="form-group py-2 col-6">
+              <div className="form-group py-2 col-6 text-center">
                 <label>
                   {" "}
-                  <h6>Max New Token Ratio </h6>
+                  <h6>Start position</h6>{" "}
                 </label>
                 <input
                   type="number"
                   className="form-control"
-                  value={maxNewTokensRatio}
-                  onChange={handleMaxNewTokensRatioChange}
+                  min={0}
+                  value={startPosition}
+                  onChange={handleStartPositionChange}
                 />
               </div>
             </div>
@@ -346,7 +358,7 @@ const EncryptForm = () => {
               <h3>
                 <b> Result: </b>
               </h3>
-              <p> Message Rate: {messageRate.toPrecision(4)} %</p>
+              <p> Message Rate: {messageRate?.toPrecision(4)} %</p>
               <p> {text}</p>
             </div>
           </div>

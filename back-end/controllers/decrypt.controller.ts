@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { validationResult, matchedData } = require("express-validator");
+import axios from "axios";
 
 import { Request, Response } from "express";
 
@@ -10,7 +11,7 @@ export const decrypt = async (req: Request, res: Response) => {
     return res.status(422).send(errors.array());
   }
 
-  const { text, msg_base, seed_scheme, window_length, private_key } = req.body;
+  const { text, msg_base, seed_scheme, window_length } = req.body;
 
   try {
     const rawData = {
@@ -19,7 +20,7 @@ export const decrypt = async (req: Request, res: Response) => {
       msg_base: parseInt(msg_base),
       seed_scheme: seed_scheme,
       window_length: parseInt(window_length),
-      private_key: parseInt(private_key),
+      private_key: 0,
     };
 
     const result = await fetch("http://localhost:6969/decrypt", {
@@ -32,13 +33,12 @@ export const decrypt = async (req: Request, res: Response) => {
 
     // Decode the result from the server
     const data = JSON.parse(await result.text());
-    console.log("Decoded Data:", data);
 
     for (let key in data) {
       const decodedItem = atob(data[key]);
       data[key] = decodedItem;
     }
-    console.log(data);
+    console.log(data)
     // Handle the result from the server
     return res.status(200).send(data);
   } catch (error) {

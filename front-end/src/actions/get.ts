@@ -7,6 +7,7 @@ export const sendEncryptCommand = async (
   startPosition: number,
   seedScheme: string,
   windowLength: number,
+  minNewTokensRatio: number,
   maxNewTokensRatio: number,
   numBeams: number,
   repetitionPenalty: number
@@ -20,6 +21,7 @@ export const sendEncryptCommand = async (
   formData.append("start_pos", startPosition.toString());
   formData.append("seed_scheme", seedScheme);
   formData.append("window_length", windowLength.toString());
+  formData.append("min_new_tokens_ratio", minNewTokensRatio.toString());
   formData.append("max_new_tokens_ratio", maxNewTokensRatio.toString());
   formData.append("num_beams", numBeams.toString());
   formData.append("repetition_penalty", repetitionPenalty.toString());
@@ -31,6 +33,7 @@ export const sendEncryptCommand = async (
   });
 
   const data = await res.json();
+  console.log("DATA        ", data);
 
   return { status: res.status, data: data };
 };
