@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { sendEncryptCommand } from "../../../actions/get";
 import { getKeys } from "../../../actions/manage-key-owner";
 import { getKeysShared } from "../../../actions/manage-key-shared";
@@ -36,11 +36,27 @@ const EncryptForm = () => {
   const [tokensInfo, setTokensInfo] = useState<TokenInfo[]>([]);
   const [messageRate, setMessageRate] = useState(0);
   const [text, setText] = useState("");
-  const [typeOfKey, setTypeOfKey] = useState("owner");
-  const [secretKey, setSecretKey] = useState(0);
+  const typeOfKeySelected = useRef<HTMLSelectElement>(null);
+  const secretKeySelected = useRef<HTMLSelectElement>(null);
+
   const [listKeys, setListKeys] = useState<KeyAttributes[]>([]);
 
   const [range, setRange] = useState<number[]>([20, 37]);
+
+  useEffect(() => {
+    const typeOfKey = typeOfKeySelected.current?.value;
+    if (typeOfKey === "shared") {
+      getKeysShared().then((res) => {
+        const keys = res?.data;
+        setListKeys(keys);
+      });
+    } else {
+      getKeys().then((res) => {
+        const keys = res?.data;
+        setListKeys(keys);
+      });
+    }
+  }, []);
 
   const handleRangeChange = (event: Event, newValue: number[]) => {
     setRange(newValue as number[]);
@@ -49,11 +65,9 @@ const EncryptForm = () => {
   };
 
   const handleTypeOfKeyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTypeOfKey(e.target.value);
     if (e.target.value === "owner") {
       getKeys().then((res) => {
         setListKeys(res.data);
-        console.log("KEY", res.data);
       });
     } else {
       getKeysShared().then((res) => {
@@ -61,10 +75,6 @@ const EncryptForm = () => {
         setListKeys(keys);
       });
     }
-  };
-
-  const handleSecretKeyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSecretKey(parseInt(e.target.value));
   };
 
   const handleDeltaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,6 +119,7 @@ const EncryptForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const secretKey = parseInt(secretKeySelected.current?.value || "0");
     const result = await sendEncryptCommand(
       prompt,
       message,
@@ -126,6 +137,7 @@ const EncryptForm = () => {
 
     if (result.status === 200) {
       setHaveResult(false);
+      console.log(result.data.text);
       setText(result.data.text);
       setTokensInfo(result.data.tokensInfo);
       setMessageRate(result.data.msgRate);
@@ -240,7 +252,7 @@ const EncryptForm = () => {
                 </label>
                 <select
                   className="ms-5 text-center p-1"
-                  value={typeOfKey}
+                  ref={typeOfKeySelected}
                   onChange={handleTypeOfKeyChange}
                 >
                   <option value="owner" className="text-center">
@@ -256,8 +268,7 @@ const EncryptForm = () => {
                   <>
                     <select
                       className="ms-5 p-1 text-center"
-                      value={secretKey}
-                      onChange={handleSecretKeyChange}
+                      ref={secretKeySelected}
                     >
                       {listKeys.map((key) => (
                         <option key={key.id} value={key.value}>
@@ -359,7 +370,12 @@ const EncryptForm = () => {
                 <b> Result: </b>
               </h3>
               <p> Message Rate: {messageRate?.toPrecision(4)} %</p>
-              <p> {text}</p>
+              <textarea
+                className="form-control"
+                rows={10}
+                value={text}
+                readOnly
+              />
             </div>
           </div>
           <div className="col-md-8">

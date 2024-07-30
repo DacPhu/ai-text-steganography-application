@@ -21,7 +21,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
     id!: number;
     keyId!: number;
     userId!: number;
-    permission!: number;
 
     static associate(models: any) {
       KeySharing.belongsTo(models.SecretKey, {

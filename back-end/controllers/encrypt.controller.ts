@@ -9,6 +9,8 @@ export const encrypt = async (req: Request, res: Response) => {
   if (!errors.isEmpty()) {
     return res.status(422).send(errors.array());
   }
+
+  console.log("BODY", req.body);
   const {
     msg,
     prompt,
@@ -23,6 +25,7 @@ export const encrypt = async (req: Request, res: Response) => {
     num_beams,
     repetition_penalty,
   } = req.body;
+  console.log(req.body);
   const encodedMsg = Buffer.from(msg).toString("base64");
 
   try {
@@ -60,13 +63,11 @@ export const encrypt = async (req: Request, res: Response) => {
     const text: string = data.texts[0];
     const msgRate: number = parseFloat(data.msgs_rates[0]) * 100;
     const tokensInfos: any = data.tokens_infos;
-    console.log("Text:", text);
     res.status(200).send({
       text: text,
       msgRate: msgRate,
       tokensInfo: tokensInfos[0],
     });
-
   } catch (error) {
     console.error("Error sending data to server:", error);
     res.status(500).send("Internal Server Error");

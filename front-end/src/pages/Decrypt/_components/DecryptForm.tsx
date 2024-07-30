@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { sendDecryptCommand } from "../../../actions/get";
 import { getKeys } from "../../../actions/manage-key-owner";
 import { getKeysShared } from "../../../actions/manage-key-shared";
@@ -15,13 +15,12 @@ const DecryptForm = () => {
   const [windowLength, setWindowLength] = useState(1);
   const [text, setText] = useState("");
   const [haveResult, setHaveResult] = useState(false);
-  const [result, setResult] = useState("");
-  const [secretKey, setSecretKey] = useState(0);
+  const [result, setResult] = useState<Map<number, string>>();
   const [listKeys, setListKeys] = useState<KeyAttributes[]>([]);
-  const [typeOfKey, setTypeOfKey] = useState("owner");
+  const secretKeySelected = useRef<HTMLSelectElement>(null);
+  const typeOfKeySelected = useRef<HTMLSelectElement>(null);
 
   const handleTypeOfKeyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTypeOfKey(e.target.value);
     if (e.target.value === "owner") {
       getKeys().then((res) => {
         setListKeys(res.data);
@@ -34,11 +33,22 @@ const DecryptForm = () => {
     }
   };
 
-  const handleSecretKeyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSecretKey(parseInt(e.target.value));
-  };
+  useEffect(() => {
+    const typeOfKey = typeOfKeySelected.current?.value;
+    if (typeOfKey === "owner") {
+      getKeys().then((res) => {
+        setListKeys(res.data);
+      });
+    } else {
+      getKeysShared().then((res) => {
+        const keys = res?.data;
+        setListKeys(keys);
+      });
+    }
+  }, []);
 
   const handleMessageBaseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("MESSAGE BASE", e.target.value);
     setMessageBase(Number(e.target.value));
   };
 
@@ -58,6 +68,8 @@ const DecryptForm = () => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+
+    const secretKey = parseInt(secretKeySelected.current?.value || "0");
     const res = await sendDecryptCommand(
       text,
       messageBase,
@@ -65,12 +77,9 @@ const DecryptForm = () => {
       seedScheme,
       windowLength
     );
+    console.log(res);
     if (res && res.status === 200) {
-      let content = "";
-      for (const key in res.data) {
-        content += `${key}: ${res.data[key]}\n`;
-      }
-      setResult(content);
+      setResult(res.data);
       setHaveResult(true);
     }
   };
@@ -93,13 +102,6 @@ const DecryptForm = () => {
               />
               <div className="d-flex justify-content-between align-items-center mt-3">
                 <small className="text-muted">0/5,000 characters</small>
-                {/* <div className="form-group">
-                  <label className="btn btn-outline-secondary">
-                    Upload file{" "}
-                    <input type="file" hidden onChange={handleFileChange} />
-                  </label>
-                  {file && <small className="text-muted">{file.name}</small>}
-                </div> */}
               </div>
             </div>
             <div className="d-flex justify-content-center align-items-center mt-3">
@@ -150,8 +152,8 @@ const DecryptForm = () => {
                 <h6>Secret Key</h6>{" "}
               </label>
               <select
-                className="ms-5 text-center p-1"
-                value={typeOfKey}
+                className="ms-2 text-center p-1"
+                ref={typeOfKeySelected}
                 onChange={handleTypeOfKeyChange}
               >
                 <option value="owner"> My key </option>
@@ -160,9 +162,8 @@ const DecryptForm = () => {
               {listKeys.length > 0 ? (
                 <>
                   <select
-                    className="ms-5 text-center p-1"
-                    value={secretKey}
-                    onChange={handleSecretKeyChange}
+                    className="ms-2 text-center p-1"
+                    ref={secretKeySelected}
                   >
                     {listKeys.map((key) => (
                       <option key={key.id} value={key.value}>
@@ -198,13 +199,18 @@ const DecryptForm = () => {
           <div className="card m-3 p-3">
             <h5>Result</h5>
             <div className="form-group">
-              <label>Text</label>
-              <textarea
-                className="form-control"
-                rows={5}
-                value={result}
-                readOnly
-              />
+              {result &&
+                Object.entries(result).map(([k, v]) => (
+                  <div className="bg-light d-flex my-1 p-1 align-items-center">
+                    <h6 className="col-1 m-0">Shift {k}</h6>
+                    <textarea
+                      className="col-11 p-1"
+                      rows={1}
+                      value={v}
+                      readOnly
+                    />
+                  </div>
+                ))}
             </div>
           </div>
         </>

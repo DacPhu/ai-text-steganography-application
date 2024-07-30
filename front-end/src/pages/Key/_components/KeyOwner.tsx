@@ -88,6 +88,7 @@ const KeyOwner: React.FC = () => {
       const keys = await getKeys();
       setListKeys(keys.data);
       setShowCreateModal(false);
+      window.location.reload();
     } catch (error) {
       console.error("Failed to create key:", error);
     }
@@ -102,7 +103,7 @@ const KeyOwner: React.FC = () => {
       setKeyToShare(null);
       setUsernameToShare("");
       setShowShareModal(false);
-      //   window.location.reload();
+      window.location.reload();
     } catch (error) {
       console.error("Failed to share key:", error);
     }
