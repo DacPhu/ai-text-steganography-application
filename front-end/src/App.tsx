@@ -5,6 +5,7 @@ import EncryptPage from "./pages/Encrypt/EncryptPage";
 import DecryptPage from "./pages/Decrypt/DecryptPage";
 import LogInPage from "./pages/Login/LogInPage";
 import SignUpPage from "./pages/SignUp/SignUpPage";
+import DetectImagesPage from "./pages/DetectImages/DetectImages"
 import KeyPage from "./pages/Key/KeyPage";
 import { AppContextProvider } from "./auth-provider";
 
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/decrypt" element={<DecryptPage />} />
           <Route path="/login" element={<LogInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/detect-images" element={<DetectImagesPage />} />
           <Route path="/key" element={<KeyPage />} />
         </Routes>
       </Router>

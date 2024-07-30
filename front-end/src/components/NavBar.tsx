@@ -48,12 +48,17 @@ const Navbar = () => {
                 Decrypt
               </a>
             </li>
-
+            <li className="nav-item mx-1">
+              <a className="nav-link text-white" href="/detect-images">
+                Detect Images
+              </a>
+            </li>
             <li className="nav-item mx-1">
               <a className="nav-link text-white" href="/key">
                 Key
               </a>
             </li>
+            
           </ul>
 
           {isAuth ? (
