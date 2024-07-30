@@ -18,6 +18,7 @@ export const encrypt = async (req: Request, res: Response) => {
     start_pos,
     seed_scheme,
     window_length,
+    min_new_tokens_ratio,
     max_new_tokens_ratio,
     num_beams,
     repetition_penalty,
@@ -35,7 +36,8 @@ export const encrypt = async (req: Request, res: Response) => {
       msg_base: parseInt(msg_base),
       seed_scheme: seed_scheme,
       window_length: parseInt(window_length),
-      private_key: parseInt(private_key),
+      private_key: parseInt(private_key) | 0,
+      min_new_tokens_ratio: parseFloat(min_new_tokens_ratio),
       max_new_tokens_ratio: parseFloat(max_new_tokens_ratio),
       num_beams: parseFloat(num_beams),
       repetition_penalty: parseInt(repetition_penalty),
@@ -55,18 +57,16 @@ export const encrypt = async (req: Request, res: Response) => {
     }
 
     const data = JSON.parse(await result.text());
-    console.log("Data:", data);
-    const text: string = data.text;
-    const msgRate: number = parseFloat(data.msg_rate) * 100;
-    const tokensInfo: any = data.tokens_info;
-
-    console.log(msgRate);
-    console.log(tokensInfo);
+    const text: string = data.texts[0];
+    const msgRate: number = parseFloat(data.msgs_rates[0]) * 100;
+    const tokensInfos: any = data.tokens_infos;
+    console.log("Text:", text);
     res.status(200).send({
       text: text,
       msgRate: msgRate,
-      tokensInfo: tokensInfo,
+      tokensInfo: tokensInfos[0],
     });
+
   } catch (error) {
     console.error("Error sending data to server:", error);
     res.status(500).send("Internal Server Error");

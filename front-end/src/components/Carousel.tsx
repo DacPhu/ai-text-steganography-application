@@ -15,11 +15,11 @@ const MyCarousel = () => {
     <Carousel
       activeIndex={index}
       onSelect={handleSelect}
-      className="col-md-10 bg-dark container-fluid bg-light d-flex align-items-center pt-5 mt-5 rounded"
-    >
+      className="col-md-10 bg-dark container-fluid d-flex align-items-center pt-5 mt-5 rounded"
+    > 
       <Carousel.Item>
         <img
-          className="d-block w-100"
+          className="d-block w-50 m-auto"
           src={WelcomeBackground}
           alt="Welcome Background"
         />

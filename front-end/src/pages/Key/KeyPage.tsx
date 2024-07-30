@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../auth-provider";
 import "../../styles/Modal.css";
 import KeyOwner from "./_components/KeyOwner";
 import KeyShared from "./_components/KeyShared";
 import KeySharing from "./_components/KeySharing";
 
 const KeyPage: React.FC = () => {
+  const { isAuth } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  if (isAuth === false) {
+    navigate("/login");
+  }
+
   const [activeTab, setActiveTab] = useState("KeyOwner");
 
   const handleTabToggle = (tab: string) => {

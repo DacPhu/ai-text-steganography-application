@@ -24,9 +24,10 @@ export const AppContextProvider = ({
       if (res && res.status != 401) {
         console.log("RES", res);
         setAuth(true);
+        console.log("AUTH", isAuth);
       }
     });
-  }, []);
+  }, [isAuth]);
 
   return (
     <AppContext.Provider value={{ isAuth, setAuth }}>

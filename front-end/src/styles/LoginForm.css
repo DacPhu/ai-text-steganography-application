@@ -9,7 +9,7 @@ body {
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url("../assets/images/bg-ecrypt.jpg") no-repeat;
+  background: url("https://cdn.pixabay.com/photo/2023/07/25/19/47/milky-way-8149815_1280.jpg");
   background-size: cover;
   background-position: center;
 }

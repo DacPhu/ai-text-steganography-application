@@ -22,6 +22,6 @@ module.exports = {
     database: "db-text-steganography",
     port: 5432,
     host: "databasePostgres",
-    dialect: "postgresql",
+    dialect: "postgres",
   },
 };
