@@ -88,7 +88,7 @@ const Dropbox = () => {
                             >
                                 Detect Image
                             </LoadingButton>
-                            {result && (
+                            {result && mreImage && (
                                 <>
                                     {/* <h3 className="mt-3">{result}</h3> */}
                                     <img src={mreImage} alt="Uploaded" className="img-fluid mt-4" style={{ maxHeight: "100%", maxWidth: "100%" }} />
