@@ -36,20 +36,20 @@ const Dropbox = () => {
             
             try {
                 await new Promise((resolve) => setTimeout(resolve, 2000)); 
-                const response = await fetch(uploadedImage);
-                const blob = await response.blob();
-                const formData = new FormData();
-                formData.append('image', blob, 'image.png');
+                // const response = await fetch(uploadedImage);
+                // const blob = await response.blob();
+                // const formData = new FormData();
+                // formData.append('image', blob, 'image.png');
 
             
-                const apiResponse = await fetch('YOUR_BACKEND_API_URL', {
-                    method: 'POST',
-                    body: formData,
-                });
+                // const apiResponse = await fetch('YOUR_BACKEND_API_URL', {
+                //     method: 'POST',
+                //     body: formData,
+                // });
 
-                if (!apiResponse.ok) throw new Error('Network response was not ok');
+                // if (!apiResponse.ok) throw new Error('Network response was not ok');
 
-                const data = await apiResponse.json();
+                // const data = await apiResponse.json();
                 
                 setRealConfidentPercent(15)
                 setResult('REAL');
